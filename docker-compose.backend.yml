@@ -1,11 +1,5 @@
 version: "3"
 services:
-  frontend:
-    image: 897729099078.dkr.ecr.ap-northeast-2.amazonaws.com/slam-server-front:latest
-    ports:
-      - "3000:3000"
-    restart: always
-
   backend:
     env_file:
       - .env
@@ -13,5 +7,5 @@ services:
     ports:
       - "8000:8000"
     restart: always
-    environment:
+    environment: 
       - ENVIRONMENT=PROD

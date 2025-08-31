@@ -36,6 +36,30 @@ export const WebSocketProfileClient = ({
     }
   });
 
+  // 다른 탭에서 프로필 변경 감지
+  useEffect(() => {
+    const channel = new BroadcastChannel('profile_updates');
+    
+    channel.onmessage = (event) => {
+      if (event.data.type === 'profile_updated') {
+        const { sender_id, nickname, image } = event.data.data;
+        
+        // 프로필 업데이트 적용
+        const editThings = {
+          "nickname": nickname,
+          "image": image === 'none' ? undefined : image
+        };
+        
+        updateUserProfile(sender_id, editThings);
+        updateProfile(sender_id, editThings['nickname'], editThings['image']);
+      }
+    };
+
+    return () => {
+      channel.close();
+    };
+  }, [updateUserProfile, updateProfile]);
+
   useEffect(() => {
     console.log("new web sokcet");
     const socket = new WebSocket(
@@ -105,6 +129,15 @@ export const WebSocketProfileClient = ({
       };
 
       socketRef.current.send(JSON.stringify(payload));
+      
+      // 다른 탭에도 프로필 변경 알림
+      const channel = new BroadcastChannel('profile_updates');
+      channel.postMessage({
+        type: 'profile_updated',
+        data: payload
+      });
+      channel.close();
+      
       refreshTabs();
       setSendEditFlag(false); // 전송 후 플래그 초기화
       useMessageStore.getState().setFileUrl(null);

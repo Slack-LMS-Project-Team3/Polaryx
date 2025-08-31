@@ -20,7 +20,8 @@ pool = pooling.MySQLConnectionPool(
     password            = settings.DB_PASSWORD,
     database            = settings.DB_NAME,
     connection_timeout  = int(settings.CONNECTION_TIMEOUT),
-    autocommit          = True
+    autocommit          = True,
+    charset             = "utf8mb4"
 )
 
 

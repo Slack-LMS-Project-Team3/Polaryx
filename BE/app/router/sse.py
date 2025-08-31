@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
 from fastapi.responses import StreamingResponse
 import asyncio
 from asyncio import CancelledError
 import json
 from typing import Dict, Set
+from app.core.security import verify_token_and_get_token_data
 
 router = APIRouter()
 
@@ -51,10 +52,11 @@ async def event_generator(request: Request, workspace_id: str):
             del subscribers[workspace_id]
 
 @router.get("/sse/notifications")
-async def sse_notifications(request: Request, workspaceId: str):
+async def sse_notifications(request: Request, workspaceId: str, data = Depends(verify_token_and_get_token_data)):
     """
     클라이언트는 ?workspaceId=xxx 쿼리로 워크스페이스 구분해서 연결함
     """
+    print("\n\n\n\nsse_notifications, user_id: ", data["user_id"])
     generator = event_generator(request, workspaceId)
     return StreamingResponse(generator, 
         media_type="text/event-stream", 

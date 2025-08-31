@@ -31,6 +31,9 @@ async def get_notion_page(workspace_id: int, tab_id: int):
 @router.post("/workspaces/{workspace_id}/tabs/{tab_id}/canvases/{page_id}")
 async def save_notion_page(workspace_id, tab_id, page_id):
     try:
+        service.save_page_id(workspace_id, tab_id, page_id)
+        return {"message": "Canvas saved successfully", "page_id": page_id}
+      
         # 먼저 Notion 페이지가 유효한지 확인
         import httpx
         async with httpx.AsyncClient() as client:
@@ -45,12 +48,13 @@ async def save_notion_page(workspace_id, tab_id, page_id):
         return {"message": "Canvas saved successfully", "page_id": page_id}
     except HTTPException:
         raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
     
 @router.patch("/workspaces/{workspace_id}/tabs/{tab_id}/canvases/{page_id}")
 async def update_notion_page(workspace_id, tab_id, page_id):
     try:
+        service.update_page_id(workspace_id, tab_id, page_id)
+        return {"message": "Canvas saved successfully", "page_id": page_id}
+
         # 먼저 Notion 페이지가 유효한지 확인
         import httpx
         async with httpx.AsyncClient() as client:
@@ -65,5 +69,3 @@ async def update_notion_page(workspace_id, tab_id, page_id):
         return {"message": "Canvas updated successfully", "page_id": page_id}
     except HTTPException:
         raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))

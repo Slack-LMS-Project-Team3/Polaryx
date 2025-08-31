@@ -1,4 +1,5 @@
 INSERT INTO polaryx.`groups` (id, name,workspace_id) VALUES
+INSERT INTO polaryx.`groups` (id, name,workspace_id) VALUES
      (1, '정글8기',1),
      (2, '307',1),
      (3, 'Frontend',1),
@@ -85,26 +86,19 @@ INSERT INTO polaryx.messages (tab_id, sender_id, content, is_updated, sender_nam
      (1, UNHEX('8430DCCE5C1411F0A6350242AC110002'), '오늘 하루도 수고 많으셨습니다. 각 조 피드백은 내일 오전까지 정리해 드릴게요.', 0, '이동석코치님', NULL, '2025-03-13 16:49:44', 127, 20, 52, 0, 1, 1),
      (1, UNHEX('8430DCCE5C1411F0A6350242AC110002'), '식당 운영 관련 정책 리마인드 및 음식물 쓰레기 최소화를 위한 협조 요청\n-외부음식은 20시 이후에만 식당에서 취식 가능합니다(단, 일요일은 종일 가능). 외부음식 취식 관련 정책을 반드시 준수하여 주세요.\n 식당에서 배출되는 음식물 쓰레기 최소화를 위해, 10인 이상의 회식(외부 식당 이용 또는 배달 음식 취식)이 예정되어 있을 경우 1일 전까지 코치진 또는 운영팀에 알려 주시기 바랍니다.', 0, '이동석코치님', NULL, '2025-03-13 17:03:12', 75, 13, 101, 1, 1, 1),
      (1, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '안녕하십니까 정글러 여러분\n 다음주 월,화요일 코치 커피챗 신청을 원하시는 분들은 링크 에 접속 후 신청룰을 참고하여 기입 부탁드립니다.', 0, '유윤선코치님', NULL, '2025-03-13 17:16:55', 104, 7, 37, 1, 0, 1),
-     (1, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://docs.google.com/spreadsheets/d/1TJwPk-ouY0S6WZm54-8CovGEOavEiZ6M/edit?gid=1806443967#gid=1806443967">링크</a></p> 로 접속 바랍니다.', 0, '유윤선코치님', NULL, '2025-03-13 17:29:44', 94, 16, 115, 0, 1, 1),
-     (1, UNHEX('CEF6C2175C1711F0A8650242AC110002'), 'AWS 정글 8기  Paddlet 주소입니다.\n<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://padlet.com/feaver85/8-hw1426cs3xbpkncr">AWS링크</a></p> \n AWS 클라우드 환경 관련 질문 있으신 분들은 상기 사이트에 이용 해보시기 바랍니다.', 0, '유윤선코치님', NULL, '2025-03-13 17:43:12', 90, 18, 84, 1, 1, 1),
-     (1, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '4시 40분 부터 301호 발표 시작합니다.', 0, '유윤선코치님', NULL, '2025-03-13 17:56:01', 70, 2, 112, 1, 0, 1),
-     (1, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '교육동 4층 402호 ~ 405호 교육장 탈취 등 작업으로 인해 7/18(금)까지 출입이 금지됩니다. 또한, 해당 공간 내 에어콘 및 전열교환기 사용이 절대 금지됩니다. 참고하여 주시기 바랍니다. 감사합니다.', 0, '유윤선코치님', NULL, '2025-03-13 18:09:44', 113, 25, 97, 1, 1, 1),
-     (1, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '내일 일정 사전 공유드립니다.\n1400-1700 나만무 중간 발표  (장소: 정글 스테이지)\n내일 발표는 306호, 307호, 301호 순으로 진행됩니다.\n306호는 14시까지 정글 스테이지에 착석 해 주시기 바랍니다.\n앞 반의 발표가 마무리될 즈음 공지드릴 예정이니, 다음 반 발표자분들은 미리 정글 스테이지로 이동해 주시기 바랍니다.\n또한, 다른 반의 기획 발표를 듣고 싶으신 분은 자유롭게 참여하실 수 있습니다.', 0, '유윤선코치님', NULL, '2025-03-13 18:23:12', 85, 14, 41, 0, 1, 1),
-     (1, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '노동부 심사위원단이 7월 7일(월) 오후 1시부터 최대 4시간 동안 교육 현장 점검을 진행할 예정입니다.\n오후 2시가 아니라 1시입니다!!\n점심 식사 후에 모든 교육생들은 교육장에서 학습 해 주시기 바랍니다.', 0, '유윤선코치님', NULL, '2025-03-13 18:36:55', 91, 11, 117, 1, 1, 1),
+     (1, UNHEX('CEF6C2175C1711F0A8650242AC110002'), 'AWS 정글 8기  Paddlet 주소입니다.\n<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://padlet.com/feaver85/8-hw1426cs3xbpkncr">AWS링크</a></p> \n AWS 클라우드 환경 관련 질문 있으신 분들은 상기 사이트에 이용 해보시기 바랍니다.', 0, '유윤선코치님', NULL, '2025-07-11 17:43:12', 90, 18, 84, 1, 1, 1),
+     (1, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '4시 40분 부터 301호 발표 시작합니다.', 0, '유윤선코치님', NULL, '2025-07-13 17:56:01', 70, 2, 112, 1, 0, 1),
+     (1, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '교육동 4층 402호 ~ 405호 교육장 탈취 등 작업으로 인해 7/18(금)까지 출입이 금지됩니다. 또한, 해당 공간 내 에어콘 및 전열교환기 사용이 절대 금지됩니다. 참고하여 주시기 바랍니다. 감사합니다.', 0, '유윤선코치님', NULL, '2025-07-13 18:09:44', 113, 25, 97, 1, 1, 1),
+     (1, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '노동부 심사위원단이 7월 7일(월) 오후 1시부터 최대 4시간 동안 교육 현장 점검을 진행할 예정입니다.\n오후 2시가 아니라 1시입니다!!\n점심 식사 후에 모든 교육생들은 교육장에서 학습 해 주시기 바랍니다.', 0, '유윤선코치님', NULL, '2025-07-13 18:36:55', 91, 11, 117, 1, 1, 1),
      (2, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '여기 이모지 보내지나요 😶', 0, '박은채', NULL, '2025-03-14 08:12:23', 1, 9, 1, 0, 1, 1),
      (2, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '네 잘 보내집니다. ^^', 0, '유윤선코치님', NULL, '2025-03-14 08:34:11', 0, 20, 1, 1, 0, 1),
-     (2, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '질문이 있습니다', 0, '박은채', NULL, '2025-03-14 08:36:55', 1, 13, 0, 1, 1, 1),
      (2, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '점검 몇 시에 끝날까요?', 0, '신명훈', NULL, '2025-03-14 08:49:02', 0, 2, 1, 0, 1, 1),
-     (2, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '질문이 있습니다', 0, '박은채', NULL, '2025-03-14 09:03:44', 1, 17, 1, 1, 0, 1),
-     (2, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '이거 왜 바로바로 안 보내지죠?', 0, '박은채', NULL, '2025-03-14 09:19:10', 0, 6, 1, 1, 1, 1),
      (2, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '점검은 14:00 ~ 15:00 까지 진행될 예정입니다. 불편을 드려서 죄송합니다 ', 0, '유윤선코치님', NULL, '2025-03-14 09:32:41', 1, 25, 0, 1, 1, 1),
-     (2, UNHEX('CCCCCAAAAAAAAAAAAAAAAEEAAAAADDDD'), '혹시 예비군 관련서류는 어떻게 진행하면 될까요', 0, '이찬석', NULL, '2025-03-14 09:44:28', 1, 4, 1, 0, 1, 1),
-     (2, UNHEX('CCCCCAAAAAAAAAAAAAAAAEEAAAAADDDD'), '넵 감사합니다!', 0, '이찬석', NULL, '2025-03-14 09:57:12', 0, 11, 1, 1, 0, 1),
-     (2, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '<증명서 요청 방법>\n\n성명, 생년월일, 참여 과정명 (예: 홍길동, 2000.01.01, 정글 8기)\n문서 발급 사유 (예: 예비군 훈련 연기, 실업급여 지급 증빙, 교육참여 확인서)\n문서 제출처 (예: 예비군 동대, 고용센터)\n문서상 반드시 포함되어야 하는 내용 기재 (예: ① 이름, ② 생년월일, ③ 참여 과정명, ④ MM.DD ~ MM.DD 기간의 출석기록)', 0, '유윤선코치님', NULL, '2025-03-14 10:11:33', 1, 8, 0, 1, 1, 1),
-     (2,UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'),'안녕하세요!',0,'박은채', NULL, '2025-03-14 10:23:19', 0, 15, 1, 1, 0, 1),
-     (2,UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'),'질문이 있습니다!',0,'박은채', NULL, '2025-03-14 10:36:01', 1, 22, 1, 0, 1, 1),
-     (2,UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'),'혹시 기숙사 에어콘이 중간에 멈추던데 혹시 언제 꺼지는지 알 수 있을까요?',0,'박은채', NULL, '2025-03-14 10:49:44', 1, 3, 0, 1, 1, 1),
-     (2,UNHEX('8430DCCE5C1411F0A6350242AC110002'),'에어콘은 기숙사에서 점심에 자동으로 꺼지게 되어있습니다^^ 식사후 방에가셔서 다시 키면 될꺼같습니다.',0,'이동석코치님', NULL, '2025-03-14 11:03:12', 0, 19, 1, 1, 0, 1),
+     (2, UNHEX('CCCCCAAAAAAAAAAAAAAAAEEAAAAADDDD'), '혹시 예비군 관련서류는 어떻게 진행하면 될까요', 0, '이찬석', NULL, '2025-07-14 09:44:28', 1, 4, 1, 0, 1, 1),
+     (2, UNHEX('CEF6C2175C1711F0A8650242AC110002'), '<증명서 요청 방법>\n\n성명, 생년월일, 참여 과정명 (예: 홍길동, 2000.01.01, 정글 8기)\n문서 발급 사유 (예: 예비군 훈련 연기, 실업급여 지급 증빙, 교육참여 확인서)\n문서 제출처 (예: 예비군 동대, 고용센터)\n문서상 반드시 포함되어야 하는 내용 기재 (예: ① 이름, ② 생년월일, ③ 참여 과정명, ④ MM.DD ~ MM.DD 기간의 출석기록)', 0, '유윤선코치님', NULL, '2025-07-14 10:11:33', 1, 8, 0, 1, 1, 1),
+     (2,UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'),'질문이 있습니다!',0,'박은채', NULL, '2025-07-20 10:36:01', 1, 22, 1, 0, 1, 1),
+     (2,UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'),'혹시 기숙사 에어콘이 중간에 멈추던데 혹시 언제 꺼지는지 알 수 있을까요?',0,'박은채', NULL, '2025-07-22 10:49:44', 1, 3, 0, 1, 1, 1),
+     (2,UNHEX('8430DCCE5C1411F0A6350242AC110002'),'에어콘은 기숙사에서 점심에 자동으로 꺼지게 되어있습니다^^ 식사후 방에가셔서 다시 키면 될꺼같습니다.',0,'이동석코치님', NULL, '2025-07-22 11:03:12', 0, 19, 1, 1, 0, 1),
      (3, UNHEX('8430DCCE5C1411F0A6350242AC110002'), '외워서 푸는 건 한계가 있어요. 원리를 알고 코드를 짜면 언젠가 분명히 실력이 폭발합니다.', 0, '이동석코치님', NULL, '2025-03-15 08:12:23', 152, 128, 77, 85, 98, 1),
      (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '넵, 감사합니다', 0, '신명훈', NULL, '2025-03-15 08:34:11', 0, 7, 1, 1, 1, 1),
      (3, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '넵, 감사합니다', 0, '박은채', NULL, '2025-03-15 08:36:55', 1, 19, 0, 1, 1, 1),
@@ -116,108 +110,17 @@ INSERT INTO polaryx.messages (tab_id, sender_id, content, is_updated, sender_nam
      (3, UNHEX('802E0FE95C8611F0A8650242AC110002'), '<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://roytravel.tistory.com/328">표준 정렬 여기블로그 좋은거 같더라구요</a></p>', 0, '최효식', NULL, '2025-03-15 09:20:44', 22, 0, 1, 1, 1, 1),
      (3, UNHEX('05EA49CFD91F41A0BE63CACE1718DE71'), '정수론은 소수 판별부터 머리가 아프네.. 좋은 문제 추천?', 0, '안유진', NULL, '2025-03-15 09:32:41', 1, 8, 0, 1, 1, 1),
      (3, UNHEX('F3628C2A2BA14410A4E7F4CB8E5A604E'), '<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.acmicpc.net/workbook/view/6593">정수론 기본 문제 모음</a></p> 기본문제 모음집 좋아요', 1, '김도영', NULL, '2025-03-15 09:34:41', 3, 1, 0, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '배열 인덱스 실수 너무 자주 나네.. 디버깅 팁 있음?', 0, '신명훈', NULL, '2025-03-15 09:44:28', 0, 21, 1, 1, 0, 1),
-     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), '시간 복잡도 줄이는 패턴 좀 공유해주실 수 있나요?', 0, '정경호', NULL, '2025-03-15 09:57:12', 1, 3, 1, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAAAAAA'), '완전탐색에서 visited 배열 없으면 안 되나?', 0, '김윤석', NULL, '2025-03-15 10:11:33', 0, 11, 1, 0, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAEEAAAAADDDD'), '재귀 함수 depth가 깊어질 때 에러 나는 거 해결법?', 0, '이찬석', NULL, '2025-03-15 10:23:19', 1, 25, 0, 1, 1, 1),
-     (3, UNHEX('9F95C1F15C8411F0A8650242AC110002'), '이중 for문 쓸 때 시간복잡도 항상 n^2인가요?', 0, '김준혁', NULL, '2025-03-15 10:36:01', 1, 5, 1, 0, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '배열 복사 shallow, deep 차이 다시 한 번 정리해볼까요?', 0, '신명훈', NULL, '2025-03-15 10:49:44', 0, 16, 1, 1, 1, 1),
-     (3, UNHEX('1F61345F5C8611F0A8650242AC110002'), '기초 알고리즘 문제 중 추천 좀 해주세요!', 0, '임구철', NULL, '2025-03-15 11:03:12', 1, 6, 0, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '반복문으로 풀다가 재귀로 바꾸니 코드가 더 간결해졌어요!', 0, '박은채', NULL, '2025-03-15 11:16:55', 1, 12, 1, 1, 0, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAEEAAAAADDDD'), '문자열 정렬할 때 기준 문자 지정하는 방법 알면 좋을 듯요.', 0, '이찬석', NULL, '2025-03-15 11:29:44', 0, 24, 1, 1, 1, 1),
-     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), '재귀로 푸는 게 이득인 상황 예시 아시는 분?', 0, '정경호', NULL, '2025-03-15 11:43:12', 1, 1, 0, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '문자열 자르는 split()이랑 슬라이싱 차이 궁금합니다.', 0, '신명훈', NULL, '2025-03-15 11:56:01', 1, 18, 1, 0, 1, 1),
-     (3, UNHEX('802E0FE95C8611F0A8650242AC110002'), '문자열 관련해서 자주 쓰는 메서드 모아볼까요?', 0, '최효식', NULL, '2025-03-15 12:09:44', 0, 9, 1, 1, 1, 1),
-     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), '정렬 stable vs unstable 개념 깔끔하게 이해한 분?', 0, '정경호', NULL, '2025-03-15 12:23:12', 1, 20, 1, 1, 0, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAAAAAA'), '재귀 함수에서 return이 언제 되는지 직관적으로 잘 모르겠어.', 0, '김윤석', NULL, '2025-03-15 12:36:55', 1, 4, 0, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '네 알겠습니다', 0, '박은채', NULL, '2025-03-15 12:49:44', 0, 23, 1, 1, 1, 1),
-     (3, UNHEX('32F2411E5C8611F0A8650242AC110002'), '정렬은 어느 알고리즘이 제일 직관적인 것 같아?', 0, '임준혁', NULL, '2025-03-15 13:03:12', 1, 14, 1, 0, 1, 1),
-     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), '배열 최대값 찾는 반복문 최적화 방법 있을까요?', 0, '정경호', NULL, '2025-03-15 13:16:55', 1, 25, 0, 1, 1, 1),
-     (3, UNHEX('6F0AC5FD5C8411F0A8650242AC110002'), '기초 알고리즘 공부할 때 제일 먼저 해야 할 건 뭐라고 생각해?', 0, '김세현', NULL, '2025-03-15 13:29:44', 1, 2, 1, 1, 0, 1),
-     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), '기초 정렬은 시각적으로 보면 이해가 더 잘 되더라', 0, '정경호', NULL, '2025-03-15 13:43:12', 0, 15, 1, 1, 1, 1),
-     (3, UNHEX('BEA1232F5C8511F0A8650242AC110002'), '완전탐색에서 pruning 꼭 써야 하나요?', 0, '박은범', NULL, '2025-03-15 13:56:01', 1, 10, 1, 0, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAEEAAAAADDDD'), '재귀보다 반복문이 더 편하지 않나요? 혹시 반례 있음?', 0, '이찬석', NULL, '2025-03-15 14:09:44', 1, 6, 0, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAAAAAA'), '재귀 함수 디버깅할 때 call stack 보는 게 도움 되나요?', 0, '김윤석', NULL, '2025-03-15 14:23:12', 0, 18, 1, 1, 0, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '수학적 사고 필요한 정수론 유형 정리하면 도움 될 듯요.', 0, '신명훈', NULL, '2025-03-15 14:36:55', 1, 11, 1, 0, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '배열 순서 바꾸는 함수 중 가장 효율적인 거 뭐 있을까요?', 0, '박은채', NULL, '2025-03-15 14:49:44', 1, 7, 0, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAEEAAAAADDDD'), '문자열 길이 제한 있을 때 어떻게 처리하시나요?', 0, '이찬석', NULL, '2025-03-15 15:03:12', 0, 12, 1, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '반복문 변수 i 대신 다른 알파벳 쓰면 가독성 좋아질까요?', 0, '신명훈', NULL, '2025-03-15 15:16:55', 1, 1, 1, 1, 0, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://abundant-carver-c3f.notion.site/2-1bfd5b3e6ec5805f8692e887523a3441?pvs=4">목요일 시험대비 유형별 문제 리스틉니다</a><br>문제 다풀어서 풀거없다 하는 알고리즘 똑똑이들이나 저처럼 플레문제 따위는 시원하게 포기한 헛똑똑이들은 참고하세욧</p>', 0, '박은채', NULL, '2025-03-15 15:29:44', 128, 98, 65, 77, 85, 1),
-     (3, UNHEX('BEA1232F5C8511F0A8650242AC110002'),
-     '<p></p><h1><strong>장기 취업준비로 인한 좌절감을 어떻게 컨트롤 하는지?</strong></h1><p></p><p></p><ul><li><p>온 세상이 나를 거부한다는 생각이 들 수 있다.</p><p>→ 동욱님은 함께하는 친구들과 함께 희화화하며 흘러보낼 수 있었다.</p></li><li><p>같이 걸을 수 있는 동료를 만들면 좋겠다.</p><p>→ 무리에서 먼저 탈출하는 동료가 생기더라도 연연하지 말자. 기나긴 삶의 여정이라고 생각하자.</p></li><li><p>혼자 남았을 때는 소설책을 많이 읽었다.</p><p>→ 마음이 가는 등장인물에 자신을 투영해 위로를 얻었다. <em>(예: 하이큐)</em></p></li></ul><p></p><p></p><p></p><h1><strong>알고리즘 문제를 푸는 것에 대한 조언</strong></h1><p></p><p></p><ul><li><p>GPT 등장으로 인해 온라인 알고리즘 테스트를 치는 기업은 적어졌다.</p></li><li><p>알고리즘, 자료구조는 개발자로서의 필수 지식으로써 공부한다면 괜찮지만, 코딩 테스트만을 위해서는 비관적이다.</p></li><li><p>타겟하는 회사를 명확히 해서 필요한지를 먼저 파악하자.</p></li><li><p>오답노트를 활용하자.</p><p>→ 정리할 때는 내 후배들에게 이 알고리즘을 설명한다는 생각으로 접근하자.</p><p>→ 꼭 이 방법이 아니더라도 나에게 효율적인 방법을 찾아보자.</p></li></ul><p></p><p></p><p></p><h1><strong>GPT, Copilot 활용을 어디까지 허용해야 할까?</strong></h1><p></p><p></p><ul><li><p>본인이 그룹에서 가장 실력있는 개발자가 되면 모두가 따를 것이다.</p><p>→ 그렇지 않은 상황에서 규칙을 만들고 지켰는지를 따지는 것은 무의미하다.</p></li><li><p>본인에게 맞는 방법과 허용 범위를 먼저 학습해보고 효과를 보고 전파하는 방향을 해보기를 추천한다.</p></li><li><p>인프랩 구성원에게도 LLM을 적극 활용하라고 권장하나,</p><p>→ 내가 쓰는 프로그램의 단축키 정도는 다 알고 있어야 하고,</p><p>→ 간단한 코드 정도는 직접 칠 수 있어야 한다. <em>(구구단은 외울 수 있어야 하는 개념)</em></p></li><li><p>모니터에 시선을 고정한 채 2~3시간 집중, 몰입할 수 있는 경험과 능력이 중요하다.</p></li></ul><p></p><p></p><p></p><h1><strong>회사에서, 학습에서 돌부리에 치일 때마다 일어날 수 있는 마음가짐이 있다면?</strong></h1><p></p><p></p><ul><li><p>동욱님 인생에서 동욱님이 생각하는 최고의 반전은 자기 자신이었다.</p><p>→ 그때마다 “이대로 있기는 너무 아쉽지 않나?” 라는 생각을 했다.</p></li><li><p>말만 하고 행동하지 않으면 안된다고 생각했다.</p><p>→ 생각만 너무 많으면, 행동할 수 없게 된다.</p></li><li><p>번아웃은 극복해야 할 대상이 아니라, 예방해야 할 대상이다.</p></li><li><p>잠들기 전, 자기 전에 핸드폰을 보며 누워있다는 건 그날 하루가 만족스럽지 못했다는 것이다.</p><p>→ 그런 날들을 돌아보면 타인에게 휘둘리며 나를 위해 쓴 시간이 없던 시기였다.</p></li><li><p>취업을 하면 방학이 없다.</p><p>→ 앞으로 40년 이상 롱런하려면 여행 등의 특별한 이벤트가 아니라,</p><p>→ 매일 매일 만족할 수 있을만한 소소한 무언가를 만들어야 한다.</p></li></ul><p></p><p></p><p><strong>동욱쓰팁:</strong></p><p></p><ul><li><p>아침 시간 활용하기</p></li><li><p>일기 쓰기</p><p>→ 감정을 너무 솔직하게 쓰지 말고, 사실만 적기</p><p>→ 다음 날 그 사건을 긍정적으로 바라보며 서술하기</p></li></ul><p></p><p></p><p></p><h1><strong>어떤 가치관을 가진, 어떤 경험을 가진 동료와 함께 일하기를 좋아하시는지?</strong></h1><p></p><p></p><ul><li><p>득점왕 되는게 중요한게 아니라 우승팀을 만드는 것이 중요하다.</p></li><li><p>조직이 잘되게 하기 위해 노력해 본 사람이 면접도 잘보고, 일도 잘 하더라</p></li><li><p>원팀으로 일하는게 중요하다.</p><p>→ RnR이 나눠져 있더라도 백업이 필요하면 언제든지 나설 수 있는 마음가짐이 우승하는 팀을 만든다.</p></li><li><p>보통 BE가 먼저 끝나는 경우가 많다.</p><p>→ 이때 잘못된 리더십은 “왜 FE는 아직 못끝냈는지”를 꼬투리 삼는다.</p><p>→ 하지만 좋은 리더는 이 사람을 돕기 위해 뭘 해야할지를 찾고, 팀이 함께 성장할 수 있는 방법을 찾는다.</p></li></ul><p></p><p></p><p><strong>이런 경험이 중요하다:</strong></p><p></p><ol><li><p>팀 스포츠를 해본 경험</p></li><li><p>만년 후보 선수로 있더라도 팀으로써 승리해봤던 경험</p></li></ol>',
-     0, '박은범', NULL, '2025-03-15 15:43:12', 1, 1, 1, 0, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAAAAAA'),
-     '<p>팀별 면담 시간에 나온 질문 내용들 공유하면 좋을 것 같아서 올려요~</p><p></p><ol><li><p><strong>커리큘럼 상 OS 과정에서 어떤 것을 배우는지</strong></p><p></p><ul><li><p>2달차에 C 언어 공부</p></li><li><p>C를 이용한 웹 서버 구현</p></li><li><p>3달차에 PintOS를 이용해 CSAPP 내용 실습</p></li><li><p>초빙 교수님들 특강도 예정되어 있음 (2회 정도)</p></li></ul><p></p></li><li><p><strong>정글 수료 이후에 개발 공부는 어떻게 진행하는게 좋을지</strong></p><p></p><ul><li><p>조금 더 시간이 지난 이후에, 본인의 특성을 파악하고</p></li><li><p>좀 더 구체적인 이야기를 하는 게 좋을 것 같다</p></li></ul><p></p></li><li><p><strong>현재 KDT 과정 수강 중인데, 하루에 정해진 공부 시작/종료 시간 대신, 하루 공부 총 시간으로 출석을 체크하는 것은 안되는지</strong></p><p></p><ul><li><p>문의해보겠음</p></li></ul><p></p></li><li><p><strong>헬스장에 추가 기구 구비 가능 여부</strong></p><p></p><ul><li><p>안전상의 이유로 구비해두지 않았으나,</p></li><li><p>그런 문의들이 많아서 생각해보겠음</p></li></ul><p></p></li></ol>',
-     0, '김윤석', NULL, '2025-03-15 15:56:01', 1, 0, 1, 1, 1, 1),
-     (3, UNHEX('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),
-     '<ol><li><p>정글 종료 후 추천하는 진로</p><p>-&gt; 가능하면 무조건 취직 (취직후 성장 &gt; 정글에서의 성장 &gt; 독학을 통한 성장)</p></li><li><p>알고리즘 문제 푸는 방식</p><p>-&gt; 가급적 머리에서 어떻게 풀 건지를 100% 구상한 다음 코드를 써라. (50~60% 계획으로 코드한 뒤 디버깅하면서 정답에 근접하는 방식 지양)</p></li></ol>',
-     0, '이재웅', NULL, '2025-03-15 16:09:44', 1, 1, 0, 1, 1, 1),
-     (3, UNHEX('802E0FE95C8611F0A8650242AC110002'),
-     '<p>다음 주 평일 중 백승현 코치님(이전에 알고리즘 설명해 주신 코치님입니다) 커피챗이 있습니다.</p><p>반 마다 3명씩 신청 가능하다고 합니다.(307호도 3명)</p><p>백승현 게임테크랩 코치님 커피챗 희망하시는 분은 여기 스레드에 댓글로 남겨주세요!</p><p><strong>승민)</strong> 승현코치님 시간 이슈로 세 분 밖에 커피챗이 불가하니, 질문을 취합한 후 세 분이 대표로 질문하는 형태로 하는 것이 어떨지 의견 드립니다!</p>',
-     0, '최효식', NULL, '2025-03-15 16:23:12', 1, 1, 1, 0, 1, 1),
-     (3, UNHEX('8430DCCE5C1411F0A6350242AC110002'), '외워서 푸는 건 한계가 있어요. 원리를 알고 코드를 짜면 언젠가 분명히 실력이 폭발합니다.', 0, '이동석코치님', NULL, '2025-03-15 08:12:23', 25, 1, 0, 23, 0, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '넵, 감사합니다', 0, '신명훈', NULL, '2025-03-15 08:34:11', 1, 0, 1, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '넵, 감사합니다', 0, '박은채', NULL, '2025-03-15 08:36:55', 1, 1, 0, 1, 1, 1),
-     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), '재귀 함수 아직도 개념이 헷갈리는데, 쉽게 이해하는 법 있을까?', 0, '정경호', NULL, '2025-03-15 08:49:02', 1, 0, 23, 10, 0, 1),
-     (3, UNHEX('802E0FE95C8611F0A8650242AC110002'), '완전탐색 문제 푸는 팁 있으면 공유 부탁!', 0, '최효식', NULL, '2025-03-15 09:03:44', 1, 0, 10, 12, 23, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '기초 정렬 구현 코드 같이 보실 분?', 0, '박은채', NULL, '2025-03-15 09:19:10', 1, 22, 1, 0, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '배열 인덱스 실수 너무 자주 나네.. 디버깅 팁 있음?', 0, '신명훈', NULL, '2025-03-15 09:44:28', 1, 0, 1, 1, 0, 1),
-     (3, UNHEX('6F0AC5FD5C8411F0A8650242AC110002'), '명훈님 저도 배열 인덱스 실수 자주 했어요. 저는 디버깅할 때 print로 인덱스랑 값 같이 출력해보면서 어디서 틀렸는지 추적했어요. 특히 for문 돌릴 때는 범위 확인 꼭 하고, 리스트 길이랑 조건을 잘 비교하는 게 중요하더라고요. IDE에서 breakpoint 찍고 디버깅 모드로 한 줄씩 실행해보는 것도 큰 도움 됐어요!', 0, '김세현', NULL, '2025-03-16 10:00:00', 0, 1, 1, 0, 0, 0),
-     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), '시간 복잡도 줄이는 패턴 좀 공유해주실 수 있나요?', 0, '정경호', NULL, '2025-03-15 09:57:12', 1, 1, 1, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAAAAAA'), '완전탐색에서 visited 배열 없으면 안 되나?', 0, '김윤석', NULL, '2025-03-15 10:11:33', 1, 0, 1, 0, 1, 1),
-     (3, UNHEX('B2933F353084410594B6FAA8A2C46CD7'), '완전탐색에서 visited 배열 없으면 안 되나? → visited 배열은 중복 탐색을 막기 위해 중요해요. DFS나 백트래킹에서는 거의 필수로 써요.', 0, '이승민', NULL, '2025-03-16 10:12:33', 9, 1, 0, 0, 0, 0),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAEEAAAAADDDD'), '재귀 함수 depth가 깊어질 때 에러 나는 거 해결법?', 0, '이찬석', NULL, '2025-03-15 10:23:19', 1, 13, 0, 1, 1, 1),
-     (3, UNHEX('B63DB3B5F4BC445B837B7BB3C0A70334'), '재귀 함수 depth가 깊어질 때 에러 나는 거 해결법? → 파이썬이라면 sys.setrecursionlimit()을 조정하거나, 로직을 반복문으로 바꾸는 것도 방법이에요.', 0, '오수빈', NULL, '2025-03-16 10:35:33', 0, 0, 1, 0, 0, 0),
-     (3, UNHEX('9F95C1F15C8411F0A8650242AC110002'), '이중 for문 쓸 때 시간복잡도 항상 n^2인가요?', 0, '김준혁', NULL, '2025-03-15 10:36:01', 1, 7, 1, 0, 1, 1),
-     (3, UNHEX('878F4895917541A4BEAB9CFFAA2F8A5B'), '반복 범위에 따라 n log n이나 n도 나올 수 있어요. 단순히 이중이라고 n^2은 아니에요.', 0, '안예인', NULL, '2025-03-16 10:38:33', 6, 1, 3, 0, 0, 0),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '배열 복사 shallow, deep 차이 다시 한 번 정리해볼까요?', 0, '신명훈', NULL, '2025-03-15 10:49:44', 0, 22, 1, 1, 1, 1),
-     (3, UNHEX('E662D0245C8511F0A8650242AC110002'), 'shallow는 참조만 복사, deep은 내부 객체까지 복사돼요. copy 모듈 활용도 좋아요.', 0, '손채민', NULL, '2025-03-16 10:55:33', 3, 1, 1, 0, 0, 0),
-     (3, UNHEX('F3628C2A2BA14410A4E7F4CB8E5A604E'), '<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.acmicpc.net/workbook/view/6593">백준 알고리즘</a></p> 알고리즘 사이트입니다!', 1, '김도영', NULL, '2025-03-15 11:04:41', 1, 1, 0, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '반복문으로 풀다가 재귀로 바꾸니 코드가 더 간결해졌어요!', 0, '박은채', NULL, '2025-03-15 11:16:55', 1, 19, 1, 1, 0, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAEEAAAAADDDD'), '문자열 정렬할 때 기준 문자 지정하는 방법 알면 좋을 듯요.', 0, '이찬석', NULL, '2025-03-15 11:29:44', 0, 5, 1, 1, 1, 1),
-     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), '재귀로 푸는 게 이득인 상황 예시 아시는 분?', 0, '정경호', NULL, '2025-03-15 11:43:12', 1, 17, 0, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '반복문으로 풀다가 재귀로 바꾸니 코드가 더 간결해졌어요!', 0, '박은채', NULL, '2025-03-15 11:45:55', 6, 1, 1, 1, 0, 1),
      (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '문자열 자르는 split()이랑 슬라이싱 차이 궁금합니다.', 0, '신명훈', NULL, '2025-03-15 11:56:01', 1, 11, 1, 0, 1, 1),
-     (3, UNHEX('802E0FE95C8611F0A8650242AC110002'), '문자열 관련해서 자주 쓰는 메서드 모아볼까요?', 0, '최효식', NULL, '2025-03-15 12:09:44', 0, 24, 1, 1, 1, 1),
-     (3, UNHEX('6F0AC5FD5C8411F0A8650242AC110002'), 'split, join, strip, find, replace, lower 이런 것들 많이 써요. 실습하면서 외우는 게 좋아요.', 0, '김세현', NULL, '2025-03-17 12:11:33', 1, 0, 1, 1, 0, 0),
-     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), '정렬 stable vs unstable 개념 깔끔하게 이해한 분?', 0, '정경호', NULL, '2025-03-15 12:23:12', 1, 2, 1, 1, 0, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAAAAAA'), '재귀 함수에서 return이 언제 되는지 직관적으로 잘 모르겠어.', 0, '김윤석', NULL, '2025-03-15 12:36:55', 1, 21, 0, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '네 알겠습니다', 0, '박은채', NULL, '2025-03-15 12:49:44', 0, 8, 1, 1, 1, 1),
-     (3, UNHEX('32F2411E5C8611F0A8650242AC110002'), '정렬은 어느 알고리즘이 제일 직관적인 것 같아?', 0, '임준혁', NULL, '2025-03-15 13:03:12', 1, 15, 0, 1, 1, 1),
-     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), '배열 최대값 찾는 반복문 최적화 방법 있을까요?', 0, '정경호', NULL, '2025-03-15 13:16:55', 1, 6, 0, 1, 1, 1),
-     (3, UNHEX('42E101A25C8611F0A8650242AC110002'), ' 반복문 안에서 조건 줄이면 성능 좋아져요. max 변수 하나 두고 비교만 해보세요.', 0, '정진영', NULL, '2025-03-17 13:30:00', 0, 1, 0, 0, 0, 0),
-     (3, UNHEX('6F0AC5FD5C8411F0A8650242AC110002'), '기초 알고리즘 공부할 때 제일 먼저 해야 할 건 뭐라고 생각해?', 0, '김세현', NULL, '2025-03-15 13:29:44', 1, 25, 1, 1, 0, 1),
-     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), '기초 정렬은 시각적으로 보면 이해가 더 잘 되더라', 0, '정경호', NULL, '2025-03-15 13:43:12', 0, 10, 1, 1, 1, 1),
-     (3, UNHEX('BEA1232F5C8511F0A8650242AC110002'), '완전탐색에서 pruning 꼭 써야 하나요?', 0, '박은범', NULL, '2025-03-15 13:56:01', 1, 4, 0, 1, 1, 1),
-     (3, UNHEX('F3628C2A2BA14410A4E7F4CB8E5A604E'), 'pruning은 조건 걸어서 가지치기하면 시간 복잡도 줄이는 데 유용해요.', 0, '김도영', NULL, '2025-03-17 14:05:00', 12, 0, 1, 1, 0, 0),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAEEAAAAADDDD'), '재귀보다 반복문이 더 편하지 않나요? 혹시 반례 있음?', 0, '이찬석', NULL, '2025-03-15 14:09:44', 1, 12, 0, 1, 1, 1),
-     (3, UNHEX('32F2411E5C8611F0A8650242AC110002'), '반복문이 편한 경우도 있지만, 일부 문제는 재귀가 더 적합해요.', 0, '임준혁', NULL, '2025-03-18 14:20:00', 13, 0, 1, 0, 0, 0),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAAAAAA'), '재귀 함수 디버깅할 때 call stack 보는 게 도움 되나요?', 0, '김윤석', NULL, '2025-03-15 14:23:12', 0, 18, 1, 1, 1, 1),
-     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), 'call stack 보면 어디서 재귀 호출이 멈추는지 확인할 수 있어서 좋아요.', 0, '정경호', NULL, '2025-03-18 14:25:00', 15, 13, 0, 1, 0, 0),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '수학적 사고 필요한 정수론 유형 정리하면 도움 될 듯요.', 0, '신명훈', NULL, '2025-03-15 14:36:55', 1, 9, 0, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '배열 순서 바꾸는 함수 중 가장 효율적인 거 뭐 있을까요?', 0, '박은채', NULL, '2025-03-15 14:49:44', 1, 23, 0, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAEEAAAAADDDD'), '문자열 길이 제한 있을 때 어떻게 처리하시나요?', 0, '이찬석', NULL, '2025-03-15 15:03:12', 0, 14, 1, 1, 1, 1),
-     (3, UNHEX('E2EB5DE9609D11F0A5420242AC110002'), '제한 길이 넘기지 않도록 미리 자르거나 예외 처리하면 됩니다.', 0, '김민중', NULL, '2025-03-19 15:05:00', 13, 12, 1, 1, 0, 0),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '반복문 변수 i 대신 다른 알파벳 쓰면 가독성 좋아질까요?', 0, '신명훈', NULL, '2025-03-15 15:16:55', 1, 20, 1, 1, 0, 1),
-     (3, UNHEX('6F0AC5FD5C8411F0A8650242AC110002'), '반복문 변수 i 대신 다른 알파벳 쓰면 가독성 좋아질까요? → i, j 대신 idx, count 같이 의미 있는 변수명이 더 읽기 좋아요.', 0, '김세현', NULL, '2025-03-19 15:25:00', 12, 13, 1, 1, 0, 0),
-     (3, UNHEX('BEA1232F5C8511F0A8650242AC110002'),
-     '<p></p><h1><strong>장기 취업준비로 인한 좌절감을 어떻게 컨트롤 하는지?</strong></h1><p></p><p></p><ul><li><p>온 세상이 나를 거부한다는 생각이 들 수 있다.</p><p>→ 동욱님은 함께하는 친구들과 함께 희화화하며 흘러보낼 수 있었다.</p></li><li><p>같이 걸을 수 있는 동료를 만들면 좋겠다.</p><p>→ 무리에서 먼저 탈출하는 동료가 생기더라도 연연하지 말자. 기나긴 삶의 여정이라고 생각하자.</p></li><li><p>혼자 남았을 때는 소설책을 많이 읽었다.</p><p>→ 마음이 가는 등장인물에 자신을 투영해 위로를 얻었다. <em>(예: 하이큐)</em></p></li></ul><p></p><p></p><p></p><h1><strong>알고리즘 문제를 푸는 것에 대한 조언</strong></h1><p></p><p></p><ul><li><p>GPT 등장으로 인해 온라인 알고리즘 테스트를 치는 기업은 적어졌다.</p></li><li><p>알고리즘, 자료구조는 개발자로서의 필수 지식으로써 공부한다면 괜찮지만, 코딩 테스트만을 위해서는 비관적이다.</p></li><li><p>타겟하는 회사를 명확히 해서 필요한지를 먼저 파악하자.</p></li><li><p>오답노트를 활용하자.</p><p>→ 정리할 때는 내 후배들에게 이 알고리즘을 설명한다는 생각으로 접근하자.</p><p>→ 꼭 이 방법이 아니더라도 나에게 효율적인 방법을 찾아보자.</p></li></ul><p></p><p></p><p></p><h1><strong>GPT, Copilot 활용을 어디까지 허용해야 할까?</strong></h1><p></p><p></p><ul><li><p>본인이 그룹에서 가장 실력있는 개발자가 되면 모두가 따를 것이다.</p><p>→ 그렇지 않은 상황에서 규칙을 만들고 지켰는지를 따지는 것은 무의미하다.</p></li><li><p>본인에게 맞는 방법과 허용 범위를 먼저 학습해보고 효과를 보고 전파하는 방향을 해보기를 추천한다.</p></li><li><p>인프랩 구성원에게도 LLM을 적극 활용하라고 권장하나,</p><p>→ 내가 쓰는 프로그램의 단축키 정도는 다 알고 있어야 하고,</p><p>→ 간단한 코드 정도는 직접 칠 수 있어야 한다. <em>(구구단은 외울 수 있어야 하는 개념)</em></p></li><li><p>모니터에 시선을 고정한 채 2~3시간 집중, 몰입할 수 있는 경험과 능력이 중요하다.</p></li></ul><p></p><p></p><p></p><h1><strong>회사에서, 학습에서 돌부리에 치일 때마다 일어날 수 있는 마음가짐이 있다면?</strong></h1><p></p><p></p><ul><li><p>동욱님 인생에서 동욱님이 생각하는 최고의 반전은 자기 자신이었다.</p><p>→ 그때마다 “이대로 있기는 너무 아쉽지 않나?” 라는 생각을 했다.</p></li><li><p>말만 하고 행동하지 않으면 안된다고 생각했다.</p><p>→ 생각만 너무 많으면, 행동할 수 없게 된다.</p></li><li><p>번아웃은 극복해야 할 대상이 아니라, 예방해야 할 대상이다.</p></li><li><p>잠들기 전, 자기 전에 핸드폰을 보며 누워있다는 건 그날 하루가 만족스럽지 못했다는 것이다.</p><p>→ 그런 날들을 돌아보면 타인에게 휘둘리며 나를 위해 쓴 시간이 없던 시기였다.</p></li><li><p>취업을 하면 방학이 없다.</p><p>→ 앞으로 40년 이상 롱런하려면 여행 등의 특별한 이벤트가 아니라,</p><p>→ 매일 매일 만족할 수 있을만한 소소한 무언가를 만들어야 한다.</p></li></ul><p></p><p></p><p><strong>동욱쓰팁:</strong></p><p></p><ul><li><p>아침 시간 활용하기</p></li><li><p>일기 쓰기</p><p>→ 감정을 너무 솔직하게 쓰지 말고, 사실만 적기</p><p>→ 다음 날 그 사건을 긍정적으로 바라보며 서술하기</p></li></ul><p></p><p></p><p></p><h1><strong>어떤 가치관을 가진, 어떤 경험을 가진 동료와 함께 일하기를 좋아하시는지?</strong></h1><p></p><p></p><ul><li><p>득점왕 되는게 중요한게 아니라 우승팀을 만드는 것이 중요하다.</p></li><li><p>조직이 잘되게 하기 위해 노력해 본 사람이 면접도 잘보고, 일도 잘 하더라</p></li><li><p>원팀으로 일하는게 중요하다.</p><p>→ RnR이 나눠져 있더라도 백업이 필요하면 언제든지 나설 수 있는 마음가짐이 우승하는 팀을 만든다.</p></li><li><p>보통 BE가 먼저 끝나는 경우가 많다.</p><p>→ 이때 잘못된 리더십은 “왜 FE는 아직 못끝냈는지”를 꼬투리 삼는다.</p><p>→ 하지만 좋은 리더는 이 사람을 돕기 위해 뭘 해야할지를 찾고, 팀이 함께 성장할 수 있는 방법을 찾는다.</p></li></ul><p></p><p></p><p><strong>이런 경험이 중요하다:</strong></p><p></p><ol><li><p>팀 스포츠를 해본 경험</p></li><li><p>만년 후보 선수로 있더라도 팀으로써 승리해봤던 경험</p></li></ol>',
-     0, '박은범', NULL, '2025-03-15 15:43:12', 1, 25, 0, 1, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAAAAAA'),
-     '<p>팀별 면담 시간에 나온 질문 내용들 공유하면 좋을 것 같아서 올려요~</p><p></p><ol><li><p><strong>커리큘럼 상 OS 과정에서 어떤 것을 배우는지</strong></p><p></p><ul><li><p>2달차에 C 언어 공부</p></li><li><p>C를 이용한 웹 서버 구현</p></li><li><p>3달차에 PintOS를 이용해 CSAPP 내용 실습</p></li><li><p>초빙 교수님들 특강도 예정되어 있음 (2회 정도)</p></li></ul><p></p></li><li><p><strong>정글 수료 이후에 개발 공부는 어떻게 진행하는게 좋을지</strong></p><p></p><ul><li><p>조금 더 시간이 지난 이후에, 본인의 특성을 파악하고</p></li><li><p>좀 더 구체적인 이야기를 하는 게 좋을 것 같다</p></li></ul><p></p></li><li><p><strong>현재 KDT 과정 수강 중인데, 하루에 정해진 공부 시작/종료 시간 대신, 하루 공부 총 시간으로 출석을 체크하는 것은 안되는지</strong></p><p></p><ul><li><p>문의해보겠음</p></li></ul><p></p></li><li><p><strong>헬스장에 추가 기구 구비 가능 여부</strong></p><p></p><ul><li><p>안전상의 이유로 구비해두지 않았으나,</p></li><li><p>그런 문의들이 많아서 생각해보겠음</p></li></ul><p></p></li></ol>',
-     0, '김윤석', NULL, '2025-03-15 15:56:01', 0, 2, 1, 1, 1, 1),
-     (3, UNHEX('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),
-     '<ol><li><p>정글 종료 후 추천하는 진로</p><p>-&gt; 가능하면 무조건 취직 (취직후 성장 &gt; 정글에서의 성장 &gt; 독학을 통한 성장)</p></li><li><p>알고리즘 문제 푸는 방식</p><p>-&gt; 가급적 머리에서 어떻게 풀 건지를 100% 구상한 다음 코드를 써라. (50~60% 계획으로 코드한 뒤 디버깅하면서 정답에 근접하는 방식 지양)</p></li></ol>',
-     0, '이재웅', NULL, '2025-03-15 16:09:44', 1, 5, 0, 1, 1, 1),
-     (3, UNHEX('802E0FE95C8611F0A8650242AC110002'),
-     '<p>다음 주 평일 중 백승현 코치님(이전에 알고리즘 설명해 주신 코치님입니다) 커피챗이 있습니다.</p><p>반 마다 3명씩 신청 가능하다고 합니다.(307호도 3명)</p><p>백승현 게임테크랩 코치님 커피챗 희망하시는 분은 여기 스레드에 댓글로 남겨주세요!</p><p><strong>승민)</strong> 승현코치님 시간 이슈로 세 분 밖에 커피챗이 불가하니, 질문을 취합한 후 세 분이 대표로 질문하는 형태로 하는 것이 어떨지 의견 드립니다!</p>',
-     0, '최효식', NULL, '2025-03-15 16:23:12', 1, 15, 1, 0, 1, 1),
-     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAEEAAAAADDDD'), '<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://velog.io/@qnfrma1997/%EC%A0%95%EA%B8%80-CPH-Competitive-Companion%EC%9D%8[…]EC%8A%A4%ED%8A%B8-%EC%84%A4%EC%A0%95-%EA%B0%80%EC%9D%B4%EB%93%9C">📘[정글]백준 자동 테스트 설정 가이드📘</a><br>백준 문제풀이에 도움되는 내용 공유합니다. 정글 301호 1주차 4팀 "윤석주"님이 알려주신 내용을 바탕으로 작성했습니다.</p>', 0, '이찬석', NULL, '2025-03-15 16:49:44', 98, 85, 51, 65, 77, 1),
-     (3, UNHEX('42E101A25C8611F0A8650242AC110002'), '<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://testcase.ac/">https://testcase.ac/</a><br>백준 문제 반례찾는 사이트입니다. <br>디버깅할 때 도움되실 것 같아 올립니다.</p>', 0, '정진영', NULL, '2025-03-15 17:03:12', 85, 77, 48, 51, 0, 1),
-     (3, UNHEX('AB62B1EC353F4DD6AF05E62F3B7994D4'), '<p>배상원 교수님 알고리즘 설계 기법 특강 정리한 pdf 파일도 공유드립니다~</p><div fileurl="https://file-import-s3-bucket.s3.amazonaws.com/uploads/Special%20lecture%20on%20algorithm%20design.pdf" data-type="file-download"></div>', 0, '원준석', "https://file-import-s3-bucket.s3.amazonaws.com/uploads/Special%20lecture%20on%20algorithm%20design.pdf", '2025-03-15 17:16:55', 77, 65, 32, 48, 51, 1),
-     (3, UNHEX('9F95C1F15C8411F0A8650242AC110002'), '<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html"><strong>Data Structure Visualizations</strong></a><br>알고리즘의 시각화로 이해를 돕는 사이트를 발견해 공유드립니다!</p>', 0, '김준혁', NULL, '2025-03-15 17:29:44', 65, 51, 27, 48, 51, 1),
-     (3, UNHEX('F29AB5E6A3D848D68AFDDCEEE30D05A2'), '<p>:확성기:<span class="font-bold">Q&A</span><br>조금 전 점심시간에 방효식 코치님께<br>퀴즈를 태블릿에다가 <code>디지타이저 펜(S펜, 애플펜슬)</code>을 이용해 푼 뒤<br>스크린샷으로 제출해도 되냐고 여쭤봤더니<br>그래도 된다고 하셨습니다.<br><br>참고하세요~</p>', 0, '이도연', NULL, '2025-03-15 17:43:12', 51, 65, 27, 0, 48, 1),
-     (3, UNHEX('E5F5F61806A14F2EBA2C31B2DEB6D250'), '<p><strong>하노이의 탑 시뮬레이션</strong><br><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.mathsisfun.com/games/towerofhanoi.html">https://www.mathsisfun.com/games/towerofhanoi.html</a><br>칠판에 하노이탑 <code><strong>1,000번쯤</code></strong> 그리다 발견한 사이트입니다!!!</p>', 1, '고재웅', NULL, '2025-03-15 17:56:01', 85, 0, 48, 51, 0, 1),
+     (3, UNHEX('802E0FE95C8611F0A8650242AC110002'), '문자열 관련해서 자주 쓰는 메서드 모아볼까요?', 0, '최효식', NULL, '2025-03-16 12:09:44', 0, 24, 1, 1, 1, 1),
+     (3, UNHEX('6F0AC5FD5C8411F0A8650242AC110002'), 'split, join, strip, find, replace, lower 이런 것들 많이 써요. 실습하면서 외우는 게 좋아요.', 0, '김세현', NULL, '2025-03-16 12:11:33', 1, 0, 1, 1, 0, 0),
+     (3, UNHEX('545A4AB45C8611F0A8650242AC110002'), '정렬 stable vs unstable 개념 깔끔하게 이해한 분?', 0, '정경호', NULL, '2025-03-17 12:23:12', 1, 2, 1, 1, 0, 1),
+     (3, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAAAAAA'), '재귀 함수에서 return이 언제 되는지 직관적으로 잘 모르겠어.', 0, '김윤석', NULL, '2025-03-17 12:36:55', 1, 21, 0, 1, 1, 1),
+     (3, UNHEX('9F95C1F15C8411F0A8650242AC110002'), '<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html"><strong>Data Structure Visualizations</strong></a><br>알고리즘의 시각화로 이해를 돕는 사이트를 발견해 공유드립니다!</p>', 0, '김준혁', NULL, '2025-07-19 17:29:44', 65, 51, 27, 48, 51, 1),
+     (3, UNHEX('F29AB5E6A3D848D68AFDDCEEE30D05A2'), '<p>:확성기:<span class="font-bold">Q&A</span><br>조금 전 점심시간에 방효식 코치님께<br>퀴즈를 태블릿에다가 <code>디지타이저 펜(S펜, 애플펜슬)</code>을 이용해 푼 뒤<br>스크린샷으로 제출해도 되냐고 여쭤봤더니<br>그래도 된다고 하셨습니다.<br><br>참고하세요~</p>', 0, '이도연', NULL, '2025-07-20 17:43:12', 51, 65, 27, 0, 48, 1),
+     (3, UNHEX('E5F5F61806A14F2EBA2C31B2DEB6D250'), '<p><strong>하노이의 탑 시뮬레이션</strong><br><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.mathsisfun.com/games/towerofhanoi.html">https://www.mathsisfun.com/games/towerofhanoi.html</a><br>칠판에 하노이탑 <code><strong>1,000번쯤</code></strong> 그리다 발견한 사이트입니다!!!</p>', 1, '고재웅', NULL, '2025-07-20 17:56:01', 85, 0, 48, 51, 0, 1),
+     (3, UNHEX('05EA49CFD91F41A0BE63CACE1718DE71'), '<p>배상원 교수님 알고리즘 설계 기법 특강 정리한 pdf 파일도 공유드립니다~</p><div fileurl="https://file-import-s3-bucket.s3.amazonaws.com/uploads/Special%20lecture%20on%20algorithm%20design.pdf" data-type="file-download"></div>', 0, '안유진', 'https://file-import-s3-bucket.s3.amazonaws.com/uploads/Special%20lecture%20on%20algorithm%20design.pdf', '2025-07-21 12:36:55', 1, 21, 0, 1, 1, 1),
+     (3, UNHEX('1F61345F5C8611F0A8650242AC110002'),'<p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://abundant-carver-c3f.notion.site/2-1bfd5b3e6ec5805f8692e887523a3441?pvs=4\">목요일 시험대비 유형별 문제 리스트입니다</a></p><p>문제 다풀어서 풀거없다 하는 알고리즘 똑똑이들이나 저처럼 플레문제 따위는 시원하게 포기한 헛똑똑이들은 참고하세욧</p>', 0, '임구철', NULL, '2025-07-22 12:36:55', 1, 21, 0, 1, 1, 1),
+     (3, UNHEX('32F2411E5C8611F0A8650242AC110002'),'<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://velog.io/@qnfrma1997/%EC%A0%95%EA%B8%80-CPH-Competitive-Companion-%EC%84%A4%EC%A0%95-%EA%B0%80%EC%9D%B4%EB%93%9C">[정글]백준 자동 테스트 설정 가이드</a> 백준 문제풀이에 도움되는 내용 공유합니다. 정글 301호 1주차 4팀 "윤석주"님이 알려주신 내용을 바탕으로 작성했습니다.</p>', 0, '임준혁', NULL, '2025-07-23 12:36:55', 1, 21, 0, 1, 1, 1),
      (11, UNHEX('E2EB5DE9609D11F0A5420242AC11000E'), '안녕하세요, 이번 주 Pintos 스레드 구현 회의 시작합니다.', 0, '윤정환', NULL, '2025-05-20 09:15:32', 0, 17, 2, 0, 0, 1),
      (11, UNHEX('E2EB5DE9609D11F0A5420242AC11000F'), 'thread_current() 함수에서 NULL 포인터가 반환되는데, 원인이 뭘까요?', 0, '이세창', NULL, '2025-05-20 09:17:45', 1, 8, 1, 0, 0, 1),
      (11, UNHEX('E2EB5DE9609D11F0A5420242AC110010'), '저는 pml4_alloc_page 실패 문제를 겪었는데, stack overflow 방지를 확인해보세요.', 0, '이영준', NULL, '2025-05-20 09:20:10', 0, 25, 1, 1, 0, 1),
@@ -255,8 +158,7 @@ INSERT INTO polaryx.messages (tab_id, sender_id, content, is_updated, sender_nam
      (16, UNHEX('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'), '오늘 9시에 10+@K 달리기 합니다. 참석자 이모지 달아줘.', 0, '이재웅', NULL, '2025-03-15 18:49:44', 1, 24, 1, 1, 0, 1),
      (16, UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAADDDD'), '참석', 0, '신명훈', NULL, '2025-03-15 19:03:12', 0, 17, 1, 1, 1, 1),
      (16, UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), '참석', 0, '박은채', NULL, '2025-03-15 19:16:55', 1, 8, 0, 1, 1, 1),
-     (16, UNHEX('CCCCCAAAAAAAAAAAAAAAAEEAAAAADDDD'), '참석', 0, '이찬석', NULL, '2025-03-15 19:29:44', 1, 11, 1, 0, 1, 1), 
-     (16, UNHEX('05EA49CFD91F41A0BE63CACE1718DE71'), '참석', 0, '안유진', NULL, '2025-03-15 19:43:12', 0, 22, 1, 1, 1, 1);
+     (16, UNHEX('CCCCCAAAAAAAAAAAAAAAAEEAAAAADDDD'), '참석', 0, '이찬석', NULL, '2025-03-15 19:29:44', 1, 11, 1, 0, 1, 1);
 
 INSERT INTO polaryx.refresh_tokens (id,user_id,token,user_name, workspace_id) VALUES
      (UNHEX('0575F69EA7584D10B33A8E7E6A135580'),UNHEX('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWEiLCJlbWFpbCI6ImlhbWxlZTEwM0BnbWFpbC5jb20iLCJleHAiOjE3NTIwMTgwOTF9.cT61XkdJtubGSs97dzhffc3St57XClxZDOfP-3oI6SU','이재웅', 1),
@@ -267,17 +169,20 @@ INSERT INTO polaryx.refresh_tokens (id,user_id,token,user_name, workspace_id) VA
      (UNHEX('88C4B0EA5BFF11F0A1F20242AC110002'),UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAAAAAA'),'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiY2NjY2NhYWFhYWFhYWFhYmJiYWFhZWVhYWFhYWRkZGQiLCJlbWFpbCI6Imdoa3FoMDlAZ21haWwuY29tIiwiZXhwIjoxNzUxOTk0Njk0fQ.RRQM3h4L8k5aoA9CihRYOkA9GBVmsOzubfVoQY9Cs8s', '김윤석', 1);
 
 INSERT INTO polaryx.roles (id, name, workspace_id, admin, announce, course, channel) VALUES
+INSERT INTO polaryx.roles (id, name, workspace_id, admin, announce, course, channel) VALUES
 	(1, 'Admin',1,1,1,1,1),
 	(2, 'Guest',1,0,0,0,0),
      (3, 'Coach',1,0,1,1,1),
 	(4, 'Jungler',1,0,0,0,1);
 
 INSERT INTO polaryx.sections (id,workspace_id,name) VALUES
+INSERT INTO polaryx.sections (id,workspace_id,name) VALUES
      (1,1,'Announcements'),
      (2,1,'Courses'),
      (3,1,'Channels'),
      (4,1,'Direct Messages');
 
+INSERT INTO polaryx.tab_members (workspace_id,user_id,tab_id,user_name) VALUES
 INSERT INTO polaryx.tab_members (workspace_id,user_id,tab_id,user_name) VALUES
      (1, UNHEX('04C520DA5C8611F0A8650242AC110002'), 1, '이민하'),
      (1, UNHEX('1F61345F5C8611F0A8650242AC110002'), 1, '임구철'),
@@ -504,27 +409,26 @@ INSERT INTO polaryx.tab_members (workspace_id,user_id,tab_id,user_name) VALUES
      (1, UNHEX('E2EB5DE9609D11F0A5420242AC110013'), 19, '이윤아'),
      (1, UNHEX('E2EB5DE9609D11F0A5420242AC110014'), 19, '이현재');
 
-INSERT INTO polaryx.tabs (name,workspace_id,section_id,url) VALUES
-     ('정글 공지 채널',1,1,NULL), -- id : 1
-     ('Q&A',1,1,NULL), -- id : 2
-     ('[WEEK01] 알고리즘 기초, 재귀 함수, 정렬, 완전탐색',1,2,NULL), -- id : 3
-     ('[WEEK02] 이분탐색, 분할정복, 스택, 큐, 우선순위 큐',1,2,NULL), -- id : 4
-     ('[WEEK03] 그래프, BFS, DFS, 위상정렬',1,2,NULL), -- id : 5
-     ('[WEEK04] 동적 프로그래밍, 그리디 알고리즘',1,2,NULL), -- id : 6
-     ('[WEEK05] C언어, 자료구조, 알고리즘',1,2,NULL), -- id : 7
-     ('[WEEK06] Red-Black Tree',1,2,NULL), -- id : 8
-     ('[WEEK07] Malloc Lab',1,2,NULL), -- id : 9
-     ('[WEEK08] 웹서버 만들기',1,2,NULL), -- id : 10
-     ('[WEEK09](PintOS)Threads',1,2,NULL), -- id : 11
-     ('[WEEK10-11](PintOS) User Programs',1,2,NULL), -- id : 12
-     ('[WEEK12-13](PintOS)Virtual Memory',1,2,NULL), -- id : 13
-     ('나만무3팀',1,3,NULL), -- id : 14
-     ('농구 사기단',1,3,NULL), -- id : 15
-     ('307호',1,3,NULL), -- id : 16
-     ('301호',1,3,NULL), -- id : 17
-     ('306호',1,3,NULL), -- id : 18
-     ('9기 공지',1,1,NULL); -- id : 19
-     -- ('전체 공지',1,1,NULL); -- id : 20
+INSERT INTO polaryx.tabs (id, name,workspace_id,section_id,url) VALUES
+     (1, '정글 공지 채널',1,1,NULL),
+     (2, 'Q&A',1,1,NULL),
+     (3, '[W01] 알고리즘 기초, 재귀 함수, 정렬, 완전탐색',1,2,NULL),
+     (4, '[W02] 이분탐색, 분할정복, 스택, 큐, 우선순위 큐',1,2,NULL),
+     (5, '[W03] 그래프, BFS, DFS, 위상정렬',1,2,NULL),
+     (6, '[W04] 동적 프로그래밍, 그리디 알고리즘',1,2,NULL),
+     (7, '[W05] C언어, 자료구조, 알고리즘',1,2,NULL),
+     (8, '[W06] Red-Black Tree',1,2,NULL),
+     (9, '[W07] Malloc Lab',1,2,NULL),
+     (10, '[W08] 웹서버 만들기',1,2,NULL),
+     (11, '[W09](PintOS)Threads',1,2,NULL),
+     (12, '[W10-11](PintOS) User Programs',1,2,NULL),
+     (13, '[W12-13](PintOS)Virtual Memory',1,2,NULL),
+     (14, '나만무3팀',1,3,NULL),
+     (15, '농구 사기단',1,3,NULL),
+     (16, '307호',1,3,NULL),
+     (17, '301호',1,3,NULL),
+     (18, '306호',1,3,NULL),
+     (19, '9기 공지',1,1,NULL);
     
 INSERT INTO polaryx.member_roles (user_id, role_id, user_name, workspace_id)
 VALUES
@@ -644,7 +548,6 @@ INSERT INTO polaryx.users (id,name,email,provider,provider_id,workspace_id) VALU
      (UNHEX('E5F5F61806A14F2EBA2C31B2DEB6D250'), '고재웅', '101minjung@gmail.com', 'google', NULL, 1),
      (UNHEX('91F18C3213B24E9D830A91A1F3108F68'), '조현호', '102minjung@gmail.com', 'google', NULL, 1),
      (UNHEX('B63DB3B5F4BC445B837B7BB3C0A70334'), '오수빈', '103minjung@gmail.com', 'google', NULL, 1),
-     -- 추가 users
      (UNHEX('E2EB5DE9609D11F0A5420242AC110001'), '권민성', 'user1@gmail.com', 'google', NULL, 1),
      (UNHEX('E2EB5DE9609D11F0A5420242AC110022'), '김관수', 'user2@gmail.com', 'google', NULL, 1),
      (UNHEX('E2EB5DE9609D11F0A5420242AC110003'), '김별', 'user3@gmail.com', 'google', NULL, 1),
@@ -790,6 +693,7 @@ INSERT INTO polaryx.workspace_members (id,user_id,workspace_id,nickname,email,im
 
 
 INSERT INTO polaryx.workspaces (id, name) VALUES
+INSERT INTO polaryx.workspaces (id, name) VALUES
      (1, '정글'),
      (2, '게임랩'),
      (3, '게임테크랩');
@@ -808,6 +712,7 @@ INSERT INTO polaryx.links (tab_id, sender_id, link_url, link_favicon, link_name,
 ('11', UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), 'https://wonit.tistory.com/368', 'https://wonit.tistory.com/favicon.ico', 'github 협업을 위한 fork', 1);
 
 INSERT INTO polaryx.push_subscriptions (
+INSERT INTO polaryx.push_subscriptions (
   user_id,
   endpoint,
   p256dh,
@@ -823,6 +728,7 @@ INSERT INTO polaryx.push_subscriptions (
   (UNHEX('BEA1232F5C8511F0A8650242AC110002'), 'https://fcm.googleapis.com/fcm/send/fgfEAmTmYsw:APA91bE56UFNSL_QBxA6hQfVhgoufWtplvReLE8vi0SqUQEHaPwjiTomgSc188UrJtFRzDMNdAo2beEFNg3099Mb29gpO4oKjnSQ49nI7VGsXQi_MVWyd2NWTFxtFb1FJfgdWDMykt8q', 'BKTg3rGbyidW03YQBSyShSZNzn0t0wEdMXQQ1PvJE44u7qoMfwcEzA1XURDrmyaGxt2AmijRScCLgo7t9TOCQXs', 'wcVI3b1GEHdrjwAybO6Rhg'),
   (UNHEX('E2EB5DE9609D11F0A5420242AC110002'), 'https://fcm.googleapis.com/fcm/send/cFF0xqaPJww:APA91bGpXt3Vvm0TO7PV1Cv0PmoIpH_olqAtISmLNNKg5oX9bye_0a5wudOCXWHlFYXKo71zaddV19qniWG4_ZKSQgGR4WOiGYoFLPbDBmewD00vD2LNNGtDssQceAKiod41HIaKoxDm', 'BHFE8b6hcIQeVFrrjn5B1UZZIkO7lB3I_EsN3xGvYQqCpM8QUCdnA427vcrNFw6QH0ZGS9O9RJipFEXHoF5f19I', 'YiiowSjoJaF7Wyq_IU8JNQ');
 
+INSERT INTO polaryx.save_messages (user_id, workspace_id, content) VALUES
 INSERT INTO polaryx.save_messages (user_id, workspace_id, content) VALUES
 (UNHEX('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'), 1, '<p>반갑습니다, 정글 0기 여러분! 🙂</p><p>채팅방 관련 공지 드립니다.</p><ol><li><p><code>공지방</code><strong>/</strong><code>Q&amp;A방</code>에 초대되신 분들은 교육생 분들끼리 새로운 채널을 생성하여 커뮤니케이션에 사용할 수 있습니다.</p></li><li><p><strong>표시이름 / 성명 / 프로필 사진 업데이트 해주세요!!!</strong></p></li></ol>'),
 (UNHEX('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'), 1, '<p><strong>내일 일정 사전 공지 드립니다.</strong></p><ul><li><p>1400-1500 퀴즈</p></li></ul><p>내일 퀴즈에는 <strong>⭐페이징⭐</strong>에 관련된 문제가 출제됩니다. 다들 미리 공부해 두시길 바랍니다.</p>'),

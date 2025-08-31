@@ -25,6 +25,14 @@ export function usePush() {
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
       return;
     }
+
+    // const handleMessage = (event: MessageEvent) => {
+    //   if (event.data && event.data.type === 'play-sound' && event.data.sound) {
+    //     const audio = new Audio(event.data.sound);
+    //     audio.play().catch(() => {});
+    //   }
+    // };
+
     const handleMessage = (event: MessageEvent) => {
       if (event.data && event.data.type === "play-sound" && event.data.sound) {
         const audio = new Audio(event.data.sound);

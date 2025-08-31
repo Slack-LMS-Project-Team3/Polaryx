@@ -26,10 +26,11 @@ def verify_token_and_get_token_data(request: Request) -> dict:
 
     # 먼저 요청 헤더의 authorization을 확인해보고,
     Bearer_token = request.headers.get("Authorization")
-    token = Bearer_token.split()[1]
 
+    try:
+        token = Bearer_token.split()[1]
+    except:
     # 토큰이 거기에 존재하지 않으면 401, NO ACCESS TOKEN PROVIDED 에러
-    if not token:
         print("NO ACCESS TOKEN PROVIDED\n\n")
         raise HTTPException(status_code=401, detail="NO ACCESS TOKEN PROVIDED")
     
