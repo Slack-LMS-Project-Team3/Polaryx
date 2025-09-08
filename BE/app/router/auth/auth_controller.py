@@ -109,7 +109,7 @@ async def auth_callback(provider: Provider, code: str, response:Response):
             access_token = token_data.get("access_token")
 
             if not access_token:
-                return {"error": "Access token not received"}
+                raise HTTPException(status_code=400, detail="Access token not received")
             
             # Step 2: 유저 정보 요청
             userinfo_res = await client.get(
