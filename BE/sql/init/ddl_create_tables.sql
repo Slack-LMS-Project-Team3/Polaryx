@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` varchar(128) NOT NULL,
   `provider` varchar(16) NOT NULL,
   `provider_id` varchar(255) DEFAULT NULL,
-  `workspace_id` int(11) DEFAULT NULL DEFAULT 1,
+  `workspace_id` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
