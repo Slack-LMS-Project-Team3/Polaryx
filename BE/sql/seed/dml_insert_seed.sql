@@ -1,5 +1,4 @@
-INSERT INTO polaryx.`groups` (id, name,workspace_id) VALUES
-INSERT INTO polaryx.`groups` (id, name,workspace_id) VALUES
+INSERT INTO polaryx.`groups` (id,name,workspace_id) VALUES
      (1, '정글8기',1),
      (2, '307',1),
      (3, 'Frontend',1),
@@ -169,20 +168,19 @@ INSERT INTO polaryx.refresh_tokens (id,user_id,token,user_name, workspace_id) VA
      (UNHEX('88C4B0EA5BFF11F0A1F20242AC110002'),UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAAAAAA'),'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiY2NjY2NhYWFhYWFhYWFhYmJiYWFhZWVhYWFhYWRkZGQiLCJlbWFpbCI6Imdoa3FoMDlAZ21haWwuY29tIiwiZXhwIjoxNzUxOTk0Njk0fQ.RRQM3h4L8k5aoA9CihRYOkA9GBVmsOzubfVoQY9Cs8s', '김윤석', 1);
 
 INSERT INTO polaryx.roles (id, name, workspace_id, admin, announce, course, channel) VALUES
-INSERT INTO polaryx.roles (id, name, workspace_id, admin, announce, course, channel) VALUES
 	(1, 'Admin',1,1,1,1,1),
 	(2, 'Guest',1,0,0,0,0),
      (3, 'Coach',1,0,1,1,1),
 	(4, 'Jungler',1,0,0,0,1);
 
-INSERT INTO polaryx.sections (id,workspace_id,name) VALUES
+
 INSERT INTO polaryx.sections (id,workspace_id,name) VALUES
      (1,1,'Announcements'),
      (2,1,'Courses'),
      (3,1,'Channels'),
      (4,1,'Direct Messages');
 
-INSERT INTO polaryx.tab_members (workspace_id,user_id,tab_id,user_name) VALUES
+
 INSERT INTO polaryx.tab_members (workspace_id,user_id,tab_id,user_name) VALUES
      (1, UNHEX('04C520DA5C8611F0A8650242AC110002'), 1, '이민하'),
      (1, UNHEX('1F61345F5C8611F0A8650242AC110002'), 1, '임구철'),
@@ -430,8 +428,7 @@ INSERT INTO polaryx.tabs (id, name,workspace_id,section_id,url) VALUES
      (18, '306호',1,3,NULL),
      (19, '9기 공지',1,1,NULL);
     
-INSERT INTO polaryx.member_roles (user_id, role_id, user_name, workspace_id)
-VALUES
+INSERT INTO polaryx.member_roles (user_id, role_id, user_name, workspace_id) VALUES
      (UNHEX('42E101A25C8611F0A8650242AC110002'), 4, '정진영', 1),
      (UNHEX('1F61345F5C8611F0A8650242AC110002'), 4, '임구철', 1),
      (UNHEX('545A4AB45C8611F0A8650242AC110002'), 4, '정경호', 1),
@@ -692,11 +689,12 @@ INSERT INTO polaryx.workspace_members (id,user_id,workspace_id,nickname,email,im
      (UNHEX(REPLACE(UUID(), '-', '')), UNHEX('E2EB5DE9609D11F0A5420242AC110045'), 1, '조윤호', 'user54@gmail.com', NULL, NULL, NULL);
 
 
-INSERT INTO polaryx.workspaces (id, name) VALUES
+
 INSERT INTO polaryx.workspaces (id, name) VALUES
      (1, '정글'),
      (2, '게임랩'),
      (3, '게임테크랩');
+
 
 INSERT INTO polaryx.links (tab_id, sender_id, link_url, link_favicon, link_name, workspace_id) VALUES
 ('1', UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), 'https://github.com/', 'https://github.com/fluidicon.png', 'Github', 1),
@@ -711,13 +709,8 @@ INSERT INTO polaryx.links (tab_id, sender_id, link_url, link_favicon, link_name,
 ('11', UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), 'https://whatissoimportantyou.tistory.com/58', 'https://t1.daumcdn.net/tistory_admin/favicon/tistory_favicon_32x32.ico', 'vs code로 디버깅하는 법', 1),
 ('11', UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), 'https://wonit.tistory.com/368', 'https://wonit.tistory.com/favicon.ico', 'github 협업을 위한 fork', 1);
 
-INSERT INTO polaryx.push_subscriptions (
-INSERT INTO polaryx.push_subscriptions (
-  user_id,
-  endpoint,
-  p256dh,
-  auth
-) VALUES
+
+INSERT INTO polaryx.push_subscriptions (user_id, endpoint, p256dh, auth) VALUES
   (UNHEX('CCCCCAAAAAAAAAAAAAAAAAAAAAAAAAAA'), 'https://fcm.googleapis.com/fcm/send/cVrDj3ACjmQ:APA91bECVysuALqDNvCS8rAAkvilF4tGgXeCkYvGcYO5Kpz0HHZ68B2MJvl_JIkJ1zqoFQwQdjXv7zGX4-S9YG8i3XI29K5kljzQYRUBdkkGIiQznBgcJuPARnw3FBeCt1fdtBsM26uE', 'BBemIHsVb4qmKr_m5grS8G7RiKy1wbvwqMIXamo8d3AmJZBVQwMEl2xa0xygW5ieqXavo930WkbgmR5IHawYRkY', 'ZIhIEfsb3uNGg8RWnKHHPA'),
   (UNHEX('05EA49CFD91F41A0BE63CACE1718DE71'), 'https://fcm.googleapis.com/fcm/send/chbCS3lI2JQ:APA91bEXeUbE7CXqo9wa0jPVY7VwHxyQxO9FMHh7nKAZ_hh1Qp77Yvm2BS8bDG9RnFOaHR6Z2jNQtxMyvVbApWQ3DeDVL8HpbvHVduupgiDT3QwJ4eg55sPfTprkSUN0aLSZj5jBVqOh', 'BBItXbNg-GnDVeLiYkJjBbgO0CbJ3_TvNsA7nxIhoNPEOp-Co1LNJDzupauQ2BmM2iwPx9FM1v5EOcGLGinNfe4', 'fiKdW97visuLob12w3mz1g'),
   (UNHEX('CCCCCAAAAAAAAAABBBAAAEEAAAAADDDD'), 'https://fcm.googleapis.com/fcm/send/cVrDj3ACjmQ:APA91bECVysuALqDNvCS8rAAkvilF4tGgXeCkYvGcYO5Kpz0HHZ68B2MJvl_JIkJ1zqoFQwQdjXv7zGX4-S9YG8i3XI29K5kljzQYRUBdkkGIiQznBgcJuPARnw3FBeCt1fdtBsM26uE', 'BJ54zsMBRhBNikdO4wATvHW9H5tLnqVzz89HUYG4wYsSsZvFuOb-HEVmsiupeMCQGYk0LzueoKbqjKXDYtm2nm4', 'PGtZo4GVdqEIMw-8dDZqMQ'),
@@ -728,7 +721,7 @@ INSERT INTO polaryx.push_subscriptions (
   (UNHEX('BEA1232F5C8511F0A8650242AC110002'), 'https://fcm.googleapis.com/fcm/send/fgfEAmTmYsw:APA91bE56UFNSL_QBxA6hQfVhgoufWtplvReLE8vi0SqUQEHaPwjiTomgSc188UrJtFRzDMNdAo2beEFNg3099Mb29gpO4oKjnSQ49nI7VGsXQi_MVWyd2NWTFxtFb1FJfgdWDMykt8q', 'BKTg3rGbyidW03YQBSyShSZNzn0t0wEdMXQQ1PvJE44u7qoMfwcEzA1XURDrmyaGxt2AmijRScCLgo7t9TOCQXs', 'wcVI3b1GEHdrjwAybO6Rhg'),
   (UNHEX('E2EB5DE9609D11F0A5420242AC110002'), 'https://fcm.googleapis.com/fcm/send/cFF0xqaPJww:APA91bGpXt3Vvm0TO7PV1Cv0PmoIpH_olqAtISmLNNKg5oX9bye_0a5wudOCXWHlFYXKo71zaddV19qniWG4_ZKSQgGR4WOiGYoFLPbDBmewD00vD2LNNGtDssQceAKiod41HIaKoxDm', 'BHFE8b6hcIQeVFrrjn5B1UZZIkO7lB3I_EsN3xGvYQqCpM8QUCdnA427vcrNFw6QH0ZGS9O9RJipFEXHoF5f19I', 'YiiowSjoJaF7Wyq_IU8JNQ');
 
-INSERT INTO polaryx.save_messages (user_id, workspace_id, content) VALUES
+
 INSERT INTO polaryx.save_messages (user_id, workspace_id, content) VALUES
 (UNHEX('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'), 1, '<p>반갑습니다, 정글 0기 여러분! 🙂</p><p>채팅방 관련 공지 드립니다.</p><ol><li><p><code>공지방</code><strong>/</strong><code>Q&amp;A방</code>에 초대되신 분들은 교육생 분들끼리 새로운 채널을 생성하여 커뮤니케이션에 사용할 수 있습니다.</p></li><li><p><strong>표시이름 / 성명 / 프로필 사진 업데이트 해주세요!!!</strong></p></li></ol>'),
 (UNHEX('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'), 1, '<p><strong>내일 일정 사전 공지 드립니다.</strong></p><ul><li><p>1400-1500 퀴즈</p></li></ul><p>내일 퀴즈에는 <strong>⭐페이징⭐</strong>에 관련된 문제가 출제됩니다. 다들 미리 공부해 두시길 바랍니다.</p>'),
