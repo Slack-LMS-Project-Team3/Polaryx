@@ -92,7 +92,7 @@ export default function Page() {
         <div className="flex flex-row items-center mb-15">
           <img src="/logo.png" alt="SLAM Logo" className="w-15 h-15" />
           <h1 className="ml-3 kaisei-harunoumi-bold text-5xl font-extrabold text-white text-center tracking-[0.5rem] whitespace-nowrap">
-            Polaris
+            Polaryx
             <span className="ml-1 -translate-y-8 inline-block text-blue-200">
               .
             </span>
