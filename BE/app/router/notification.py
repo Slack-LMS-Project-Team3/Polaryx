@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, Request
 from typing import List
 
 from app.core.security import verify_token_and_get_token_data
+from app.core.exceptions import PermissionDeniedError
 from app.service.notification import NotificationService
 from app.schema.notification.response import NotificationSchema
 
@@ -47,7 +48,11 @@ def create_push_message(nickname: str, content: str, file_url: str) -> str:
         return f"{nickname}: {clean_content}"
 
 @router.get("/{user_id}", response_model=List[NotificationSchema])
-async def get_notifications(user_id: str):
+async def get_notifications(user_id: str, token_data = Depends(verify_token_and_get_token_data)):
+    # 토큰의 user_id와 요청한 user_id가 일치하는지 확인
+    if token_data["user_id"] != user_id:
+        raise PermissionDeniedError("본인의 알림만 조회할 수 있습니다")
+
     notifications = service.get_notifications(user_id)
     return [NotificationSchema.from_domain(n) for n in notifications]
 
