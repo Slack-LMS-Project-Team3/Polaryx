@@ -22,42 +22,89 @@ export function SSEListener() {
   const refreshTabs = useTabStore((s) => s.refreshTabs);
 
   useEffect(() => {
+    const accessToken = localStorage.getItem("access_token");
+    if (!accessToken) {
+      console.warn("No access token available for SSE.");
+      return;
+    }
+
     const url = `${BASE}/api/sse/notifications?workspaceId=${workspaceId}`;
-    const es = new EventSource(url);
+    const controller = new AbortController();
 
-    // SSE 연결
-    es.onopen = () => console.log("SSE: 연결");
+    async function connectSSE() {
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Accept': 'text/event-stream',
+          },
+          signal: controller.signal,
+        });
 
-    // SSE 오류
-    es.onerror = () => {
-      console.log("SSE: 연결 끊김");
-      es.close();
-    } 
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
 
-    // 새로운 메시지 도착함 (new_message 타입)
-    es.addEventListener("new_message", (e: MessageEvent) => {
-      const p: SSEPayload = JSON.parse(e.data);
-      console.log("SSE: 새 메세지 도착");
-      if (p.tab_id.toString() !== tabId) {
-        incUnread(p.tab_id);
+        console.log("SSE: 연결");
+
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+
+        if (!reader) return;
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('event:')) {
+              const eventType = line.substring(6).trim();
+              continue;
+            }
+
+            if (line.startsWith('data:')) {
+              const data = line.substring(5).trim();
+
+              if (data === 'p') { // ping
+                console.log("SSE: 유지 ping");
+                continue;
+              }
+
+              try {
+                const payload: SSEPayload = JSON.parse(data);
+
+                if (payload.type === 'new_message') {
+                  console.log("SSE: 새 메세지 도착");
+                  if (payload.tab_id.toString() !== tabId) {
+                    incUnread(payload.tab_id);
+                  }
+                } else if (payload.type === 'invited_to_tab') {
+                  console.log("SSE: 새로운 탭 초대");
+                  addInvitedTab(payload.tab_id);
+                  refreshTabs();
+                }
+              } catch (e) {
+                console.error("SSE data parse error:", e);
+              }
+            }
+          }
+        }
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.log("SSE: 연결 끊김", error);
+        }
       }
-    });
+    }
 
-    // SSE 유지를 위한 핑
-    es.addEventListener("ping", () => {
-      console.log("SSE: 유지 ping");
-    });
+    connectSSE();
 
-    // 새로운 탭에 초대됨
-    es.addEventListener("invited_to_tab", (e: MessageEvent) => {
-      const p: SSEPayload = JSON.parse(e.data);
-      console.log("SSE: 새로운 탭 초대");
-      addInvitedTab(p.tab_id);
-      refreshTabs(); // 사이드바 갱신
-    });
-
-    return () => es.close();
-  }, [workspaceId, incUnread, refreshTabs]);
+    return () => {
+      controller.abort();
+    };
+  }, [workspaceId, incUnread, refreshTabs, addInvitedTab, tabId]);
 
   return null;
 }
