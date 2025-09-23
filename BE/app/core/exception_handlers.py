@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.core.exceptions import BaseCustomException
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,7 @@ async def custom_http_exception_handler(request: Request, exc: BaseCustomExcepti
             "code": exc.error_code,
             "status": exc.status_code
         },
-        "timestamp": None,
+        "timestamp": datetime.now().isoformat(),
         "path": request.url.path,
         "method": request.method
     }
