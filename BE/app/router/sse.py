@@ -76,7 +76,7 @@ async def send_sse_notification(workspace_id: str, payload: dict):
         await queue.put(payload)
 
 @router.post("/sse/notifications/{workspace_id}")
-async def asdf(workspace_id: str, request: Request):
+async def asdf(workspace_id: str, request: Request, token_data = Depends(verify_token_and_get_token_data)):
     print("\n\n\nin asdf")
     payload = await request.json()
     print(payload)
