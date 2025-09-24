@@ -45,8 +45,6 @@ export function SSEListener() {
           throw new Error(`HTTP ${response.status}`);
         }
 
-        console.log("SSE: 연결");
-
         const reader = response.body?.getReader();
         const decoder = new TextDecoder();
 
@@ -69,7 +67,6 @@ export function SSEListener() {
               const data = line.substring(5).trim();
 
               if (data === 'p') { // ping
-                console.log("SSE: 유지 ping");
                 continue;
               }
 
@@ -77,12 +74,10 @@ export function SSEListener() {
                 const payload: SSEPayload = JSON.parse(data);
 
                 if (payload.type === 'new_message') {
-                  console.log("SSE: 새 메세지 도착");
                   if (payload.tab_id.toString() !== tabId) {
                     incUnread(payload.tab_id);
                   }
                 } else if (payload.type === 'invited_to_tab') {
-                  console.log("SSE: 새로운 탭 초대");
                   addInvitedTab(payload.tab_id);
                   refreshTabs();
                 }
@@ -94,7 +89,6 @@ export function SSEListener() {
         }
       } catch (error) {
         if (!controller.signal.aborted) {
-          console.log("SSE: 연결 끊김", error);
         }
       }
     }

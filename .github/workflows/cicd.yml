@@ -8,6 +8,7 @@ on:
     types: [opened, reopened, synchronize]
     branches:
       - "main"
+
 env:
   AWS_REGION: "ap-northeast-2"
   BE_ECR_REPOSITORY: "slam-server"
@@ -17,34 +18,34 @@ env:
   NEXT_PUBLIC_VAPID_PUBLIC_KEY: "BNreSJUzEIIAWG-qnlzRvYepD_svGLY6PJtNO4F6O8Vu9Ev_bMZK5albJ2OJCBOkn2-9bJcTIpx_4Z02YSEarwU"
 
 jobs:
-  ci-cd:
+  changes:
     runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Nextjs
-        uses: actions/setup-node@v3
+      - name: Detect changes
+        uses: dorny/paths-filter@v3
+        id: filter
         with:
-          node-version: "20"
-          cache: "npm"
-          cache-dependency-path: FE/package-lock.json
+          filters: |
+            frontend:
+              - 'FE/**'
+              - 'docker-compose.frontend.yml'
+            backend:
+              - 'BE/**'
+              - 'docker-compose.backend.yml'
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.12"
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('BE/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      registry: ${{ steps.login-ecr.outputs.registry }}
+    steps:
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -52,35 +53,85 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Debug build context
-        run: |
-          ls -al
-          ls -al ./BE
-          cat ./BE/requirements.txt
+  build-frontend:
+    needs: [changes, setup]
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Build and push image to ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          BE_ECR_REPOSITORY: ${{ env.BE_ECR_REPOSITORY }}
-          FE_ECR_REPOSITORY: ${{ env.FE_ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build --no-cache \
-          --build-arg NEXT_PUBLIC_BASE=${{ env.NEXT_PUBLIC_BASE }} \
-          --build-arg NEXT_PUBLIC_WS=${{ env.NEXT_PUBLIC_WS }} \
-          --build-arg NEXT_PUBLIC_VAPID_PUBLIC_KEY=${{ env.NEXT_PUBLIC_VAPID_PUBLIC_KEY }} \
-          -t $ECR_REGISTRY/$FE_ECR_REPOSITORY:$IMAGE_TAG \
-          -t $ECR_REGISTRY/$FE_ECR_REPOSITORY:latest ./FE
-          docker push $ECR_REGISTRY/$FE_ECR_REPOSITORY:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$FE_ECR_REPOSITORY:latest
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-          docker build --no-cache \
-          -t $ECR_REGISTRY/$BE_ECR_REPOSITORY:$IMAGE_TAG \
-          -t $ECR_REGISTRY/$BE_ECR_REPOSITORY:latest ./BE
-          docker push $ECR_REGISTRY/$BE_ECR_REPOSITORY:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$BE_ECR_REPOSITORY:latest
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Frontend image to ECR
+        uses: docker/build-push-action@v5
+        with:
+          context: ./FE
+          push: true
+          tags: |
+            ${{ needs.setup.outputs.registry }}/${{ env.FE_ECR_REPOSITORY }}:${{ github.sha }}
+            ${{ needs.setup.outputs.registry }}/${{ env.FE_ECR_REPOSITORY }}:latest
+          build-args: |
+            NEXT_PUBLIC_BASE=${{ env.NEXT_PUBLIC_BASE }}
+            NEXT_PUBLIC_WS=${{ env.NEXT_PUBLIC_WS }}
+            NEXT_PUBLIC_VAPID_PUBLIC_KEY=${{ env.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+  build-backend:
+    needs: [changes, setup]
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Backend image to ECR
+        uses: docker/build-push-action@v5
+        with:
+          context: ./BE
+          push: true
+          tags: |
+            ${{ needs.setup.outputs.registry }}/${{ env.BE_ECR_REPOSITORY }}:${{ github.sha }}
+            ${{ needs.setup.outputs.registry }}/${{ env.BE_ECR_REPOSITORY }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+  deploy-frontend:
+    needs: [changes, setup, build-frontend]
+    if: needs.changes.outputs.frontend == 'true' && (success() || failure())
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Copy frontend docker-compose to Frontend Server
         uses: appleboy/scp-action@master
@@ -88,17 +139,38 @@ jobs:
           host: ${{ secrets.EC2_FRONTEND_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.T3_EC2_SSH_KEY }}
-          source: |
-            docker-compose.frontend.yml
+          source: docker-compose.frontend.yml
           target: /home/ec2-user
-      
-      # Backend 인스턴스는 private subnet에 위치하기 때문에 파일 복사가 안됨 (인터넷 통신이 안되기에).
-      # 그래서 docker.backend.yml 파일 생성 or S3에 올린 뒤 다운로드 받는 방식으로 진행해야 됨.
-      # 근데 파일 생성하는건 한번 해봤으니까, S3에 올리고, 다운받는 방식으로 설계해봄.
-      # 사실 docker-compose.backend.yml 파일은 ci/cd 매번 돌릴때마다 S3에 업로드하고, 다운로드 받는건 불필요함.
-      # 그래서 이 파일이 수정되었을때만 S3에 업로드하고, 다운로드 하도록 조건 달아줌.
-      
-      # 1. 파일 변경 감지
+
+      - name: Deploy to Frontend Server
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ secrets.EC2_FRONTEND_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.T3_EC2_SSH_KEY }}
+          script: |
+            aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ needs.setup.outputs.registry }}
+            cd /home/ec2-user
+            docker compose -f docker-compose.frontend.yml pull
+            docker compose -f docker-compose.frontend.yml down
+            docker compose -f docker-compose.frontend.yml up -d
+            docker image prune -a -f
+
+  deploy-backend:
+    needs: [changes, setup, build-backend]
+    if: needs.changes.outputs.backend == 'true' && (success() || failure())
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
       - name: Check if docker-compose file changed
         id: check-changes
         run: |
@@ -108,96 +180,29 @@ jobs:
             echo "file_changed=false" >> $GITHUB_OUTPUT
           fi
 
-      # 2. 조건부 S3 업로드
       - name: Upload docker-compose to S3 (if changed)
         if: steps.check-changes.outputs.file_changed == 'true'
         run: |
-          aws s3 rm s3://file-import-s3-bucket/docker-compose.backend.yml
-          echo "Old file removed from S3"
+          aws s3 rm s3://file-import-s3-bucket/docker-compose.backend.yml --quiet || true
           aws s3 cp docker-compose.backend.yml s3://file-import-s3-bucket/docker-compose.backend.yml
-          echo "File uploaded to S3"
 
-      # 3. 조건부 S3 다운로드
-      - name: Download docker-compose from S3 to Backend Server 1
-        if: steps.check-changes.outputs.file_changed == 'true'
-        uses: peterkimzz/aws-ssm-send-command@master
+      - name: Deploy to Backend Servers
+        uses: peterkimzz/aws-ssm-send-command@v1
         with:
           aws-region: ${{ env.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          instance-ids: ${{ secrets.EC2_BACKEND_1_ID }}
+          instance-ids: |
+            ${{ secrets.EC2_BACKEND_1_ID }}
+            ${{ secrets.EC2_BACKEND_2_ID }}
           working-directory: /home/ec2-user
           command: |
-            rm -f /home/ec2-user/docker-compose.backend.yml
-            echo "Old file removed from server"
-            aws s3 cp s3://file-import-s3-bucket/docker-compose.backend.yml /home/ec2-user/docker-compose.backend.yml
-            echo "File downloaded from S3"
-
-      - name: Download docker-compose from S3 to Backend Server 2
-        if: steps.check-changes.outputs.file_changed == 'true'
-        uses: peterkimzz/aws-ssm-send-command@master
-        with:
-          aws-region: ${{ env.AWS_REGION }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          instance-ids: ${{ secrets.EC2_BACKEND_2_ID }}
-          working-directory: /home/ec2-user
-          command: |
-            rm -f /home/ec2-user/docker-compose.backend.yml
-            echo "Old file removed from server"
-            aws s3 cp s3://file-import-s3-bucket/docker-compose.backend.yml /home/ec2-user/docker-compose.backend.yml
-            echo "File downloaded from S3"
-
-
-      - name: Deploy to Backend Server 1 via SSM
-        uses: peterkimzz/aws-ssm-send-command@master
-        id: ssm1
-        with:
-          aws-region: ${{ env.AWS_REGION }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          instance-ids: ${{ secrets.EC2_BACKEND_1_ID }}
-          working-directory: /home/ec2-user
-          command: >-
-            sudo chown ec2-user:ec2-user /home/ec2-user/docker-compose.backend.yml &&
-            sudo -u ec2-user bash -c "
-              aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }} &&
-              docker compose -f /home/ec2-user/docker-compose.backend.yml pull &&
-              docker compose -f /home/ec2-user/docker-compose.backend.yml down &&
-              docker compose -f /home/ec2-user/docker-compose.backend.yml up -d &&
-              docker image prune -a -f
-            "
-            
-      - name: Deploy to Backend Server 2 via SSM
-        uses: peterkimzz/aws-ssm-send-command@master
-        id: ssm2
-        with:
-          aws-region: ${{ env.AWS_REGION }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          instance-ids: ${{ secrets.EC2_BACKEND_2_ID }}
-          working-directory: /home/ec2-user
-          command: >-
-            sudo chown ec2-user:ec2-user /home/ec2-user/docker-compose.backend.yml &&
-            sudo -u ec2-user bash -c "
-              aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }} &&
-              docker compose -f /home/ec2-user/docker-compose.backend.yml pull &&
-              docker compose -f /home/ec2-user/docker-compose.backend.yml down &&
-              docker compose -f /home/ec2-user/docker-compose.backend.yml up -d &&
-              docker image prune -a -f
-            "
-          
-      - name: Deploy to Frontend Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_FRONTEND_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.T3_EC2_SSH_KEY }}
-          script: |
-            aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
-            cd /home/ec2-user
-
-            docker compose -f docker-compose.frontend.yml pull
-            docker compose -f docker-compose.frontend.yml down
-            docker compose -f docker-compose.frontend.yml up -d
+            if [ "${{ steps.check-changes.outputs.file_changed }}" == "true" ]; then
+              aws s3 cp s3://file-import-s3-bucket/docker-compose.backend.yml /home/ec2-user/docker-compose.backend.yml
+            fi
+            sudo chown ec2-user:ec2-user /home/ec2-user/docker-compose.backend.yml
+            aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ needs.setup.outputs.registry }}
+            docker compose -f /home/ec2-user/docker-compose.backend.yml pull
+            docker compose -f /home/ec2-user/docker-compose.backend.yml down
+            docker compose -f /home/ec2-user/docker-compose.backend.yml up -d
             docker image prune -a -f
