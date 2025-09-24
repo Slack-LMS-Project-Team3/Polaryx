@@ -10,7 +10,6 @@ export async function logout() {
   });
 
   if (res == null) {
-    console.log("NOT REACH : logout");
     return;
   }
 
