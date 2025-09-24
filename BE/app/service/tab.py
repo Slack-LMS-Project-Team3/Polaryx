@@ -1,6 +1,6 @@
 from typing import List
 from app.repository.tab import TabRepository
-from fastapi import HTTPException
+from app.core.exceptions import ResourceNotFoundError, ValidationError, BusinessLogicError
 from app.schema.tab.response import TabMember
 
 # 탭 퇴장시 시스템 메세지를 위한 websocket_manager
@@ -23,9 +23,11 @@ class TabService:
     def create_tab(self, user_ids: List, workspace_id: int, tab_name: str, section_id: int):
         is_valid = self.repo.validate_section_in_workspace(section_id, workspace_id)
         if not is_valid:
-            raise HTTPException(status_code=400, detail="섹션이 이 워크스페이스에 속하지 않습니다.")
+            raise BusinessLogicError("섹션이 이 워크스페이스에 속하지 않습니다.")
         self.insert_tab(workspace_id, tab_name, section_id)
         rows = self.find_by_unique_key(workspace_id, tab_name, section_id)
+        if not rows:
+            raise ResourceNotFoundError("탭", f"{tab_name}")
         tab_id = rows[0][0]
         self.invite_members(workspace_id, tab_id, user_ids)
         return rows[0]
