@@ -16,17 +16,19 @@ import { Member } from "@/apis/tabApi";
 export interface TabMembersModalProps {
   tabMembers: Member[];
   onAddClick?: () => void;
+  sectionId: number;
 }
 
 export function TabMembersModal({
   tabMembers,
   onAddClick,
+  sectionId,
 }: TabMembersModalProps) {
   return (
     <div className="flex flex-col overflow-y-auto scrollbar-thin gap-0">
       <SidebarProvider>
         <SidebarMenu>
-          {onAddClick && (
+          {onAddClick && sectionId !== 4 && (
             <InviteListItem
               key="add-member-button"
               user={{ nickname: "Add Members" }}
