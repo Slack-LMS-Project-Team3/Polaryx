@@ -198,3 +198,16 @@ export async function postGroupList(workspaceId: string, tabId: string, groupIds
   if (res == null || !res.ok) throw new Error("탭 그룹 추가 실패");
   return res.json();
 }
+
+/* 탭 나가기 */
+ export async function exitTab(workspaceId: string, tabId: string, userIds: string[]): Promise<boolean> {
+    const res = await fetchWithAuth(`${BASE}/api/workspaces/${workspaceId}/tabs/${tabId}/out`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_ids: userIds }),
+      },
+    );
+    if (res == null || !res.ok) throw new Error("탭 나가기 실패");
+    return true;
+  }

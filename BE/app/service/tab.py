@@ -77,14 +77,32 @@ class TabService:
     async def exit_tab(self, workspace_id: int, tab_id: int, user_ids: List[str]):
         users = self.repo.exit_members(workspace_id, tab_id, user_ids)
         users.sort()
+
+        # 탭 정보 조회 (섹션 ID 확인용)
+        tab_info = self.find_tab(workspace_id, tab_id)
+        section_id = tab_info[0][2] if tab_info else None
+
         for user in users:
             print("in exit_tab, user_names: ", user[0])
             # [0]: nickname, [1]: user_id, [2]: tab_name
-            await connection.broadcast(workspace_id, tab_id, f"<p style='color: gray'>{user[0]}님이 {user[2]}에서 나갔습니다.</p>")
-            await message_service.save_message(tab_id, 
-                                               UUID(user[1]), 
-                                               f"<p style='color: gray'>{user[0]}님이 {user[2]}에서 나갔습니다.</p>", 
+            
+            # DM 섹션(section_id == 4)인 경우 메시지 형태 변경
+            if section_id == 4:
+                exit_message = f"<p style='color: gray'>{user[0]}님이 나갔습니다.</p>"
+            else:
+                exit_message = f"<p style='color: gray'>{user[0]}님이 {user[2]}에서 나갔습니다.</p>"
+
+            await connection.broadcast(workspace_id, tab_id, exit_message)
+            await message_service.save_message(tab_id,
+                                               UUID(user[1]),
+                                               exit_message,
                                                None)
+
+        # 탭에 남은 멤버가 없는 경우 탭 삭제
+        remaining_count = self.repo.check_tab_has_members(tab_id)
+        if remaining_count == 0:
+            self.repo.delete_tab(workspace_id, tab_id)
+
         return len(users)
     
     def modify_name(self, workspace_id: int, tab_id: int, tab_name: str):

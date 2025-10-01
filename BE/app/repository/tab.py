@@ -207,7 +207,6 @@ WHERE
   AND deleted_at IS NULL;
 """
 
-# 미완
 exit_tab_members_by_id = """
 DELETE FROM tab_members 
 WHERE id =%(id)s;
@@ -215,10 +214,12 @@ WHERE id =%(id)s;
 
 find_exit_member_by_user_id = """
 SELECT wm.nickname, tm.id, t.name FROM tab_members tm
-JOIN workspace_members wm 
-JOIN tabs t
-WHERE tm.user_id = %(user_id)s AND wm.user_id = %(user_id)s
-  AND tm.tab_id = %(tab_id)s AND t.id = %(tab_id)s;
+JOIN workspace_members wm ON tm.user_id = wm.user_id
+JOIN tabs t ON tm.tab_id = t.id
+WHERE tm.user_id = %(user_id)s
+  AND tm.tab_id = %(tab_id)s
+  AND wm.deleted_at IS NULL
+  AND t.deleted_at IS NULL;
 """
 
 find_nicknames = """
@@ -240,8 +241,20 @@ SELECT * FROM tab_members WHERE user_id = %(user_id)s;
 update_tab_name = """
 UPDATE tabs SET name = %(tab_name)s,
                 updated_at = %(updated_at)s
-WHERE workspace_id = %(workspace_id)s 
+WHERE workspace_id = %(workspace_id)s
   AND id = %(tab_id)s;
+"""
+
+delete_empty_tab = """
+UPDATE tabs SET deleted_at = %(deleted_at)s
+WHERE workspace_id = %(workspace_id)s
+  AND id = %(tab_id)s
+  AND deleted_at IS NULL;
+"""
+
+check_tab_has_members = """
+SELECT COUNT(*) FROM tab_members
+WHERE tab_id = %(tab_id)s;
 """
 
 class TabRepository(AbstractQueryRepo):
@@ -384,9 +397,8 @@ class TabRepository(AbstractQueryRepo):
                 "user_id": UUID(user_id).bytes
             }
             self.execute(insert_tab_members, param)
-        return self.execute(find_nicknames, {"tab_id": tab_id})
+        return self.execute(find_nicknames, {"tab_id": tab_id})    
     
-    # 생각해볼 문제들: tab_members가 아무도 없으면, tabs에서 tab도 삭제?
     def exit_members(self, workspace_id: int, tab_id: int, user_ids: List[str]):
         res = []
         for user_id in user_ids:
@@ -418,10 +430,23 @@ class TabRepository(AbstractQueryRepo):
         self.db.execute(update_tab_name, param)
     
     def insert_member_to_tabs(self, workspace_id: int, tab_ids: tuple[int], user_id: str):
-        for tab_id in tab_ids:  
+        for tab_id in tab_ids:
             param = {
                 "workspace_id": workspace_id,
                 "tab_id": tab_id,
-                "user_id": user_id 
+                "user_id": user_id
             }
             self.db.execute(insert_tab_members, param)
+
+    def check_tab_has_members(self, tab_id: int) -> int:
+        param = {"tab_id": tab_id}
+        result = self.execute(check_tab_has_members, param)
+        return result[0][0] if result else 0
+
+    def delete_tab(self, workspace_id: int, tab_id: int):
+        param = {
+            "workspace_id": workspace_id,
+            "tab_id": tab_id,
+            "deleted_at": datetime.now()
+        }
+        self.execute(delete_empty_tab, param)
