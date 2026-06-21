@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
@@ -30,11 +31,32 @@ from app.router import links
 from app.router import sse  # SSE
 from app.router import canvas
 from app.router import save_message
+from app.router import observability
+from app.service.push_dispatch import push_dispatch_service
+from app.service.message_persistence import message_persistence_service
 
 
 load_dotenv()
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    push_started = False
+    message_persistence_started = False
+    try:
+        await push_dispatch_service.start_workers_if_enabled()
+        push_started = True
+        await message_persistence_service.start_workers_if_enabled()
+        message_persistence_started = True
+        yield
+    finally:
+        if message_persistence_started:
+            await message_persistence_service.stop_workers()
+        if push_started:
+            await push_dispatch_service.stop_workers()
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -62,6 +84,7 @@ app.include_router(router=role.router, prefix="/api")
 app.include_router(router=sse.router, prefix="/api")
 app.include_router(router=canvas.router, prefix="/api")
 app.include_router(router=save_message.router, prefix="/api")
+app.include_router(router=observability.router, prefix="/api")
 
 
 # 예외 핸들러 등록
@@ -73,8 +96,4 @@ app.add_exception_handler(Exception, general_exception_handler)
 @app.get("/api/health")
 async def health_check():
     return {"status": "healthy", "message": "Service is running"}
-
-
-
-
 

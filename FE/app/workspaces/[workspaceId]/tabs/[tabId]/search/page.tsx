@@ -32,7 +32,7 @@ export default function MessageSearchPage() {
   }, [keyword, workspaceId, tabId]);
 
   return (
-    <div className="p-4 text-black">
+    <div className="p-4 text-black w-full h-full overflow-y-auto scrollbar-thin">
       <h1 className="text-xl font-bold mb-4">Message Search Results</h1>
       {keyword ? (
         messages.length ? (

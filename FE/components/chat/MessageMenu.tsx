@@ -3,9 +3,10 @@
 import { useParams } from "next/navigation";
 import { useMyUserStore } from "@/store/myUserStore";
 import { Trash2, Pencil, SmilePlus, Pin, Bookmark } from "lucide-react";
+import type { MessageId } from "@/store/messageStore";
 
 interface MessageMenuProps {
-    msgId: number;
+    msgId: MessageId;
     userId: string;
     content: string;
     onEmoji: () => void;
@@ -50,4 +51,3 @@ export function MessageMenu({ msgId, userId, content, onEmoji, onEdit, onDelete,
         </>
     );
 }
-    

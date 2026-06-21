@@ -12,7 +12,7 @@ export default function Page() {
   const [reload, setReload] = useState(0);
 
   return (
-    <div className="px-30 py-8 bg-muted w-full flex flex-col ">
+    <div className="px-30 py-8 bg-muted w-full h-full min-h-0 flex flex-col overflow-y-auto scrollbar-thin">
       <div className="flex w-full flex-row items-center justify-between mb-5 pl-4">
         <div className="text-xl text-foreground">링크</div>
         <AddLinkButton

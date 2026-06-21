@@ -2,9 +2,15 @@ import json
 import uuid
 import asyncio
 import weakref
+import logging
+import time
 from fastapi import WebSocket
 from typing import Set, Dict, List, Optional
+from app.service.realtime_observability import realtime_observability
 from app.util.database.redis import RedisManager
+
+
+logger = logging.getLogger(__name__)
 
 
 class ConnectionManager:
@@ -13,6 +19,7 @@ class ConnectionManager:
         self.connection_metadata: Dict[WebSocket, Dict] = weakref.WeakKeyDictionary()
         self._lock = asyncio.Lock() # 동시성 제어를 위한 락
         self.server_id = uuid.uuid4().hex[:8]  # 서버 고유 ID
+        realtime_observability.register_server_id(self.server_id)
         self.socket_type: str = None
         self._redis_client: Optional[str] = None
         self._pubsub_client: Optional[str] = None
@@ -20,6 +27,7 @@ class ConnectionManager:
         self._is_listening = False
         self._pending_broadcasts = {}  # 브로드캐스트 배치 처리용
         self._batch_task: Optional[asyncio.Task] = None
+        self._batch_lock = asyncio.Lock()
     
     async def _get_redis_client(self):
         """Redis 클라이언트 lazy 초기화"""
@@ -57,6 +65,8 @@ class ConnectionManager:
         # 웹소켓 추가만 락으로 보호 (최소한의 임계 영역)
         async with self._lock:
             self.activate_connections[socket_type][workspace_id][tab_id].add(websocket)
+            active_count = self._connection_count(socket_type, workspace_id, tab_id)
+            realtime_observability.set_websocket_active(socket_type, workspace_id, tab_id, active_count)
 
         # Redis 초기화와 방 등록을 백그라운드에서 처리 (연결 속도 향상)
         asyncio.create_task(self._initialize_and_register_room(socket_type, workspace_id, tab_id))
@@ -68,6 +78,16 @@ class ConnectionManager:
             "tab_id": tab_id,
             "connected_at": asyncio.get_event_loop().time()
         }
+        logger.info(
+            "websocket_connected",
+            extra={
+                "socket_type": socket_type,
+                "workspace_id": workspace_id,
+                "tab_id": tab_id,
+                "active_count": active_count,
+                "server_id": self.server_id,
+            },
+        )
     
     async def disconnect(self, workspace_id: int, tab_id: int, websocket: WebSocket):
         async with self._lock: 
@@ -83,9 +103,25 @@ class ConnectionManager:
                 removed = await self._safe_remove_connection(socket_type, workspace_id, tab_id, websocket)
                 if not removed:
                     await self._close_websocket_safely(websocket)
+                active_count = self._connection_count(socket_type, workspace_id, tab_id)
+                realtime_observability.set_websocket_active(socket_type, workspace_id, tab_id, active_count)
+                logger.info(
+                    "websocket_disconnected",
+                    extra={
+                        "socket_type": socket_type,
+                        "workspace_id": workspace_id,
+                        "tab_id": tab_id,
+                        "active_count": active_count,
+                        "server_id": self.server_id,
+                    },
+                )
             
             except Exception as e:
                 await self._force_cleanup_websocket(websocket)
+
+    def _connection_count(self, socket_type: str, workspace_id: int, tab_id: int) -> int:
+        connections = self.activate_connections.get(socket_type, {}).get(workspace_id, {}).get(tab_id, set())
+        return len(connections)
     
     async def _safe_remove_connection(self, socket_type: str, workspace_id: int, tab_id: int, websocket: WebSocket) -> bool:
         """안전한 연결 제거 (KeyError 방지)"""
@@ -140,19 +176,52 @@ class ConnectionManager:
                         if websocket in connections:
                             connections.discard(websocket)
                             await self._cleanup_empty_containers(socket_type, workspace_id, tab_id)
+                            active_count = self._connection_count(socket_type, workspace_id, tab_id)
+                            realtime_observability.set_websocket_active(socket_type, workspace_id, tab_id, active_count)
                             # 방에 연결이 없으면 Redis에서도 제거 (백그라운드 처리)
                             asyncio.create_task(self._unregister_room_from_redis(socket_type, workspace_id, tab_id))
         except Exception as e:
-            print(f"웹소켓 제거 중 에러 발생: {e}")
+            logger.warning("websocket_force_cleanup_failed", extra={"exception_type": type(e).__name__})
     
     async def broadcast_local(self, workspace_id: int, tab_id: int, message: str):
         """로컬 서버의 연결된 클라이언트들에게만 브로드캐스트"""
         connections = self.activate_connections.get(self.socket_type, {}).get(workspace_id, {}).get(tab_id, set())
+        recipient_count = len(connections)
+        success_count = 0
+        failure_count = 0
+        dropped_count = 0
         for connection in list(connections):
             try:
                 await connection.send_text(message)
+                success_count += 1
             except Exception:
                 connections.discard(connection)
+                failure_count += 1
+                dropped_count += 1
+        realtime_observability.record_websocket_broadcast(
+            self.socket_type,
+            workspace_id,
+            tab_id,
+            recipient_count=recipient_count,
+            success_count=success_count,
+            failure_count=failure_count,
+            dropped_count=dropped_count,
+        )
+        if dropped_count:
+            active_count = self._connection_count(self.socket_type, workspace_id, tab_id)
+            realtime_observability.set_websocket_active(self.socket_type, workspace_id, tab_id, active_count)
+            logger.warning(
+                "websocket_broadcast_send_failure",
+                extra={
+                    "socket_type": self.socket_type,
+                    "workspace_id": workspace_id,
+                    "tab_id": tab_id,
+                    "recipient_count": recipient_count,
+                    "failure_count": failure_count,
+                    "dropped_count": dropped_count,
+                    "server_id": self.server_id,
+                },
+            )
     
     async def broadcast(self, workspace_id: int, tab_id: int, message: str):
         """최적화된 브로드캐스트: 로컬 즉시 전송 + Redis 배치 처리"""
@@ -172,42 +241,61 @@ class ConnectionManager:
     async def _queue_redis_broadcast(self, workspace_id: int, tab_id: int, message: str):
         """Redis 브로드캐스트를 큐에 추가하고 배치 처리"""
         channel = f"type:{self.socket_type}:workspace:{workspace_id}:tab:{tab_id}"
-        
-        if channel not in self._pending_broadcasts:
-            self._pending_broadcasts[channel] = []
-        
-        self._pending_broadcasts[channel].append({
-            "message": message,
-            "sender_server": self.server_id,
-            "timestamp": asyncio.get_event_loop().time()
-        })
-        
-        # 배치 처리 태스크가 없으면 시작
-        if self._batch_task is None or self._batch_task.done():
-            self._batch_task = asyncio.create_task(self._process_batch_broadcasts())
+
+        async with self._batch_lock:
+            if channel not in self._pending_broadcasts:
+                self._pending_broadcasts[channel] = []
+
+            self._pending_broadcasts[channel].append({
+                "message": message,
+                "sender_server": self.server_id,
+                "timestamp": asyncio.get_event_loop().time()
+            })
+
+            # 배치 처리 태스크가 없으면 시작
+            if self._batch_task is None or self._batch_task.done():
+                self._batch_task = asyncio.create_task(self._process_batch_broadcasts())
     
     async def _process_batch_broadcasts(self):
         """배치로 모인 브로드캐스트들을 처리"""
-        await asyncio.sleep(0.001)  # 1ms 대기로 배치 수집
-        
-        if not self._pending_broadcasts:
-            return
-            
-        try:
-            redis_client = await self._get_redis_client()
-            pipe = redis_client.pipeline()
-            
-            # 배치로 모든 메시지 publish
-            for channel, messages in self._pending_broadcasts.items():
-                for msg_data in messages:
-                    pipe.publish(channel, json.dumps(msg_data))
-            
-            await pipe.execute()
-            self._pending_broadcasts.clear()
-            
-        except Exception as e:
-            print(f"배치 Redis publish 에러: {e}")
-            self._pending_broadcasts.clear()
+        while True:
+            await asyncio.sleep(0.001)  # 1ms 대기로 배치 수집
+
+            async with self._batch_lock:
+                if not self._pending_broadcasts:
+                    self._batch_task = None
+                    return
+
+                batch = self._pending_broadcasts
+                self._pending_broadcasts = {}
+
+            batch_size = sum(len(messages) for messages in batch.values())
+            started = time.perf_counter()
+            try:
+                redis_client = await self._get_redis_client()
+                pipe = redis_client.pipeline()
+
+                # 배치로 모든 메시지 publish
+                for channel, messages in batch.items():
+                    for msg_data in messages:
+                        pipe.publish(channel, json.dumps(msg_data))
+
+                await pipe.execute()
+                realtime_observability.record_websocket_redis_publish(
+                    batch_size=batch_size,
+                    latency_seconds=time.perf_counter() - started,
+                )
+
+            except Exception as e:
+                realtime_observability.record_websocket_redis_publish(
+                    batch_size=batch_size,
+                    latency_seconds=time.perf_counter() - started,
+                    failed=True,
+                )
+                logger.warning(
+                    "websocket_redis_publish_failed",
+                    extra={"batch_size": batch_size, "exception_type": type(e).__name__, "server_id": self.server_id},
+                )
     
     async def _start_redis_listener(self):
         """Redis Pub/Sub 리스너 시작 (타입별 구독으로 최적화)"""

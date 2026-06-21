@@ -6,9 +6,8 @@ from app.service.tab import TabService
 from app.service.workspace_member import WorkspaceMemberService
 from app.core.security import verify_token_and_get_token_data
 from app.repository.workspace_member import QueryRepo as WorkspaceMemRepo
-from app.router.sse import send_sse_notification
+from app.router.sse import schedule_sse_notification
 from uuid import UUID
-import asyncio
 
 router = APIRouter(prefix="/workspaces")
 service = TabService()
@@ -73,7 +72,7 @@ async def invite_members(workspace_id: int, tab_id: int, user_ids: InviteRequest
         "message": "새 탭에 초대됨",
     }
 
-    asyncio.create_task(send_sse_notification(str(workspace_id), payload))
+    schedule_sse_notification(str(workspace_id), payload)
 
     return TabInvitation.from_rows(rows)
 

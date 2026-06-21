@@ -10,7 +10,7 @@ interface ProfileStore {
   userId: string | null;
   profile: Profile | null;
   setProfile: (prof: Profile) => void;
-  updateProfile: (targetId: string, name: string, image: string) => void;
+  updateProfile: (targetId: string, name: string, image?: string) => void;
   setUserId: (id: string) => void;
   setOpen: () => void;
   setClose: () => void;

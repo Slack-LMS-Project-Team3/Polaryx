@@ -80,12 +80,15 @@ SELECT
     MAX(r.name) AS role,
     GROUP_CONCAT(DISTINCT g.name) AS `groups`
 FROM workspace_members wm
-LEFT JOIN tab_members tm ON wm.user_id = tm.user_id
+LEFT JOIN tab_members tm
+  ON wm.user_id = tm.user_id
+ AND tm.workspace_id = wm.workspace_id
 LEFT JOIN member_roles mr ON wm.user_id = mr.user_id
 LEFT JOIN roles r ON mr.role_id = r.id
 LEFT JOIN group_members gm ON wm.user_id = gm.user_id
 LEFT JOIN `groups` g ON gm.group_id = g.id
 WHERE wm.workspace_id = %(workspace_id)s
+  AND tm.workspace_id = %(workspace_id)s
   AND tm.tab_id = %(tab_id)s
   AND wm.deleted_at IS NULL
 GROUP BY wm.user_id, wm.nickname, wm.image;
@@ -107,7 +110,8 @@ WHERE wm.workspace_id = %(workspace_id)s
   AND wm.user_id NOT IN (
       SELECT user_id
       FROM tab_members
-      WHERE tab_id = %(tab_id)s
+      WHERE workspace_id = %(workspace_id)s
+        AND tab_id = %(tab_id)s
   )
   AND wm.deleted_at IS NULL
 GROUP BY wm.user_id, wm.nickname, wm.image, r.name;

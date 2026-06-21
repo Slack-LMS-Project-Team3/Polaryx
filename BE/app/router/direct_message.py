@@ -4,8 +4,7 @@ from app.schema.direct_message.request import CreateTabRequest
 from app.schema.direct_message.response import CreateTabResponse
 from app.service.tab import TabService
 from app.service.direct_message import DMService
-from app.router.sse import send_sse_notification
-import asyncio
+from app.router.sse import schedule_sse_notification
 
 router = APIRouter(prefix="/workspaces")
 dm_service = DMService()
@@ -30,5 +29,5 @@ async def get_tab(workspace_id: int, tab_data: CreateTabRequest):
         "user_ids": target_ids,
         "message": "새 탭에 초대됨",
     }
-    asyncio.create_task(send_sse_notification(str(workspace_id), payload))
+    schedule_sse_notification(str(workspace_id), payload)
     return CreateTabResponse.from_row(row, creator_name)

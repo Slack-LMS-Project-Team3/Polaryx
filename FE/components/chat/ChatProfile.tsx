@@ -21,18 +21,17 @@ import ChatEditTiptap from "./ChatEditTiptap";
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import { updateMessage as updateMessageApi } from "@/apis/messageApi";
-import { useMessageStore } from "@/store/messageStore";
+import { useMessageStore, type MessageId } from "@/store/messageStore";
 import { useProfileStore } from "@/store/profileStore";
 import { cn } from "@/lib/utils";
 import { SmilePlus } from "lucide-react";
-import { WebSocketLikeClient } from "@/components/ws/webSocketLikeClient"; // 새로 만든 컴포넌트 import
 import { jwtDecode } from "jwt-decode";
 import { MessageMenu } from "./MessageMenu";
 import { EmojiGroupMenu, EmojiGroup } from "./EmojiGroup";
 
 interface ChatProfileProps {
   senderId: string;
-  msgId: number;
+  msgId: MessageId;
   imgSrc: string;
   nickname: string;
   time: string;
@@ -54,6 +53,10 @@ interface ChatProfileProps {
 
 function isImageFile(url: string) {
   return /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i.test(url);
+}
+
+function isPersistedMessageId(msgId: MessageId): msgId is number {
+  return typeof msgId === "number" && Number.isFinite(msgId) && msgId > 0;
 }
 
 export function ChatProfile({
@@ -93,6 +96,11 @@ export function ChatProfile({
 
   // 메시지 저장 핸들러
   const handleSave = async (newContent: string) => {
+    if (!isPersistedMessageId(msgId)) {
+      toast.error("저장 중인 메시지는 아직 수정할 수 없습니다");
+      return;
+    }
+
     setEditContent(newContent);
     onEndEdit(); // props로 받은 함수를 호출하여 수정 모드를 종료합니다.
     try {
@@ -124,6 +132,15 @@ export function ChatProfile({
         icon: <Ban className="size-5" />,
       });
     }
+  };
+
+  const handleDeleteMessage = async () => {
+    if (!isPersistedMessageId(msgId)) {
+      toast.error("저장 중인 메시지는 아직 삭제할 수 없습니다");
+      return;
+    }
+
+    await handleDelete(msgId);
   };
 
   const closeMenu = () => {
@@ -316,7 +333,7 @@ export function ChatProfile({
             <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>
               취소
             </AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleDelete(msgId)}>
+            <AlertDialogAction onClick={handleDeleteMessage}>
               삭제
             </AlertDialogAction>
           </AlertDialogFooter>
