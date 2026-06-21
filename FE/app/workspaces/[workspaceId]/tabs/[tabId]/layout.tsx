@@ -13,7 +13,7 @@ export default function TabLayout({
       <TabHeader />
 
       {/* 2. 선택된 컨텐츠 영역 (message 또는 canvas) */}
-      <div className="flex w-full h-full overflow-y-auto scrollbar-thin mt-0.5">
+      <div className="flex w-full h-full min-h-0 overflow-hidden mt-0.5">
         {children}
       </div>
     </div>

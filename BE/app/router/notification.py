@@ -1,6 +1,8 @@
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from typing import List
+import json
+from starlette.requests import ClientDisconnect
 
 from app.core.security import verify_token_and_get_token_data
 from app.core.exceptions import PermissionDeniedError
@@ -8,15 +10,8 @@ from app.service.notification import NotificationService
 from app.schema.notification.response import NotificationSchema
 
 
-from app.service.push import PushService
-from app.service.tab import TabService
-from app.service.workspace_member import WorkspaceMemberService
-from uuid import UUID
+from app.service.push_dispatch import PushDispatchEnqueueError, push_dispatch_service
 import re
-
-push_service = PushService()
-tab_service = TabService()
-wm_service = WorkspaceMemberService()
 
 router = APIRouter(prefix="/notifications", tags=["Notifications"])
 service = NotificationService()
@@ -56,30 +51,33 @@ async def get_notifications(user_id: str, token_data = Depends(verify_token_and_
     notifications = service.get_notifications(user_id)
     return [NotificationSchema.from_domain(n) for n in notifications]
 
-@router.post("/{workspace_id}/{tab_id}")
+@router.post("/{workspace_id}/{tab_id}", status_code=202)
 async def push_notifications(workspace_id: int, tab_id: int, request: Request, token_data = Depends(verify_token_and_get_token_data)):
     sender_id = token_data["user_id"]
     
-    payload = await request.json()
-    content = payload["content"]
-    clean_content = strip_tags(content)
-    sender_uuid = UUID(sender_id)
-    user_data = wm_service.get_member_by_user_id_simple(sender_uuid, workspace_id)
-    
-    members = tab_service.get_tab_members(workspace_id, tab_id)
-    tab_info = tab_service.find_tab(workspace_id, tab_id)
-    tab_name = tab_info[0][1]
-    nickname = user_data[0][0]
-    
-    recipients = [
-    str(UUID(bytes=row[0]))
-    for row in members
-    if UUID(bytes=row[0]) != sender_uuid
-    ]
-    await push_service.send_push_to(recipients, {
-        "title": tab_name,
-        "body": f"{nickname}: {clean_content}",
-        "url": f"/workspaces/{workspace_id}/tabs/{tab_id}"
-    })
+    try:
+        payload = await request.json()
+    except ClientDisconnect as exc:
+        raise HTTPException(status_code=400, detail="Notification request disconnected") from exc
+    except json.JSONDecodeError as exc:
+        raise HTTPException(status_code=400, detail="Malformed notification JSON") from exc
 
-    return
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=422, detail="Notification payload must be an object")
+
+    content = payload.get("content")
+    if not isinstance(content, str) or not content.strip():
+        raise HTTPException(status_code=422, detail="Notification content is required")
+
+    clean_content = strip_tags(content).strip()
+    try:
+        return await push_dispatch_service.enqueue_notification(
+            workspace_id=workspace_id,
+            tab_id=tab_id,
+            sender_id=sender_id,
+            content=clean_content,
+            url=f"/workspaces/{workspace_id}/tabs/{tab_id}",
+            perf_id=payload.get("perf_id") if isinstance(payload.get("perf_id"), str) else None,
+        )
+    except PushDispatchEnqueueError as exc:
+        raise HTTPException(status_code=503, detail="Web Push enqueue failed") from exc

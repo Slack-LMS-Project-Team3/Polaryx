@@ -2,11 +2,11 @@
 
 import React, { useState, useMemo } from "react";
 import confetti from "canvas-confetti";
-import { useMessageStore, EmojiType } from "@/store/messageStore";
+import { useMessageStore, EmojiType, type MessageId } from "@/store/messageStore";
 import { debounce } from "lodash";
 
 interface EmojiGroupMenuProps {
-  msgId: number;
+  msgId: MessageId;
   userId: string;
   onClose: () => void;
   checkCnt: number;
@@ -18,7 +18,7 @@ interface EmojiGroupMenuProps {
 }
 
 interface EmojiGroupProps {
-  msgId: number;
+  msgId: MessageId;
   userId: string;
   onClose: () => void;
   checkCnt: number;
@@ -233,4 +233,3 @@ export function EmojiGroup({ msgId, userId, checkCnt, clapCnt, prayCnt, sparkleC
     </div>
   );
 }
-

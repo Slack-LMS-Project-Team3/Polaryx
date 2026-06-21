@@ -4,12 +4,18 @@ export interface RefreshResponse {
   access_token: string;
 }
 
+export const authRedirect = {
+  home: () => {
+    window.location.href = "/";
+  },
+};
+
 // fetchWithAuth 으로 다시 만들기.
 export async function fetchWithAuth(
   input: RequestInfo,
   init: RequestInit = {}
 ): Promise<Response | null> {
-  let accessToken = localStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
 
   if (!accessToken) {
     console.warn("No access token available.");
@@ -17,10 +23,8 @@ export async function fetchWithAuth(
   }
 
   // Authorization 헤더 추가
-  const authHeaders = {
-    ...init.headers,
-    Authorization: `Bearer ${accessToken}`,
-  };
+  const authHeaders = new Headers(init.headers);
+  authHeaders.set("Authorization", `Bearer ${accessToken}`);
 
   init = {
     ...init,
@@ -51,10 +55,8 @@ export async function fetchWithAuth(
         console.log("**** Acess Token 받기 성공 ***");
 
         // Authorization 다시 업데이트
-        const retryHeaders = {
-          ...init.headers,
-          Authorization: `Bearer ${newAccessToken}`,
-        };
+        const retryHeaders = new Headers(init.headers);
+        retryHeaders.set("Authorization", `Bearer ${newAccessToken}`);
 
         const retryInit: RequestInit = {
           ...init,
@@ -67,7 +69,7 @@ export async function fetchWithAuth(
         return res;
       } else if (detail === "INVALID ACCESS TOKEN" || detail === "NOT INVALID REFRESH TOKEN") {
         console.warn("유효하지 않은 토큰");
-        window.location.href = "/";
+        authRedirect.home();
         return null;
       }
     } catch (e) {
@@ -103,6 +105,10 @@ export async function reissueAccessToken(details: string): Promise<any> {
     }
     else {
       const { access_token: newToken } = (await res.json()) as RefreshResponse;
+      if (!newToken) {
+        console.warn("ACCESS TOKEN 재발급 응답에 access_token이 없습니다");
+        return null;
+      }
       console.log(newToken);
       localStorage.setItem("access_token", newToken);
       return newToken;

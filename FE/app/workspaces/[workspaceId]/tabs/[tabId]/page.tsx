@@ -11,9 +11,9 @@ export default function ChannelDefault() {
   const tabId = params.tabId as string;
   
   return (
-    <div className="flex flex-col w-full">
-      {/* 채팅 리스트 - 고정 높이를 제외한 나머지 영역 차지, 스크롤 가능 */}
-      <div className="flex flex-col w-full h-full overflow-y-auto scrollbar-thin">
+    <div className="flex flex-col w-full h-full min-h-0">
+      {/* 채팅 리스트 - 고정 높이를 제외한 나머지 영역 차지 */}
+      <div className="flex flex-col w-full flex-1 min-h-0 overflow-hidden">
         <ChatPage workspaceId={workspaceId} tabId={tabId} />
       </div>
 

@@ -1,0 +1,17 @@
+services:
+  backend:
+    build:
+      context: ./BE
+      dockerfile: Dockerfile
+    image: polaryx-backend-local:latest
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=PROD
+      - RDB_HOST=host.docker.internal
+      - REDIS_HOST=host.docker.internal
+      - NOSQL_HOST=host.docker.internal
+      - NOSQL_URL=mongodb://host.docker.internal:27017

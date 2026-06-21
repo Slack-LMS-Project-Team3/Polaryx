@@ -1,13 +1,25 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { useMessageStore } from "@/store/messageStore";
-import { WebSocketClient } from "../ws/webSocketClient";
+import { RealtimeWebSocketClient } from "../ws/RealtimeWebSocketClient";
 import { ShowDate } from "./ShowDate";
 import { ChatProfile } from "./ChatProfile";
 import { getMessages } from "@/apis/messageApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SSEListener } from "../sse/SSEListener";
-import { WebSocketLikeClient } from "../ws/webSocketLikeClient";
-import { WebSocketProfileClient } from "../ws/webSocketProfileClient";
+import { buildChatRows } from "./chatRows";
+import type { ChatMessage, ChatRow } from "./chatRows";
+
+const TOP_FETCH_THRESHOLD_PX = 30;
+const BOTTOM_FOLLOW_THRESHOLD_PX = 100;
+const VIRTUAL_OVERSCAN_ROWS = 10;
 
 function SkeletonChat() {
   return (
@@ -19,6 +31,97 @@ function SkeletonChat() {
       </div>
     </div>
   );
+}
+
+function mapApiMessage(msg: any): ChatMessage {
+  return {
+    tabId: msg.tab_id,
+    senderId: msg.sender_id,
+    msgId: msg.msg_id,
+    nickname: msg.nickname ?? "",
+    content: msg.content ?? "",
+    image: msg.image,
+    createdAt: msg.created_at,
+    isUpdated: msg.is_updated ?? 0,
+    fileUrl: msg.file_url ?? null,
+    checkCnt: msg.e_check_cnt ?? 0,
+    clapCnt: msg.e_clap_cnt ?? 0,
+    likeCnt: msg.e_like_cnt ?? 0,
+    sparkleCnt: msg.e_sparkle_cnt ?? 0,
+    prayCnt: msg.e_pray_cnt ?? 0,
+    myToggle: msg.my_toggle ?? {
+      check: false,
+      pray: false,
+      sparkle: false,
+      clap: false,
+      like: false,
+    },
+  };
+}
+
+function formatMessageTime(createdAt?: string) {
+  if (!createdAt) return " ";
+
+  return new Date(createdAt).toLocaleTimeString("ko-KR", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
+
+function isNearBottom(el: HTMLElement) {
+  return (
+    el.scrollHeight - el.scrollTop - el.clientHeight <=
+    BOTTOM_FOLLOW_THRESHOLD_PX
+  );
+}
+
+function findRenderedRow(
+  container: HTMLElement,
+  key: string,
+): HTMLElement | undefined {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>("[data-chat-row-key]"),
+  ).find((node) => node.dataset.chatRowKey === key);
+}
+
+function firstNumericMessageId(messages: ChatMessage[]) {
+  return messages.find((message) => typeof message.msgId === "number")
+    ?.msgId as number | undefined;
+}
+
+function rowActionMessageId(row: Extract<ChatRow, { type: "message" }>) {
+  return row.message.msgId ?? row.key;
+}
+
+function rowEstimate(row?: ChatRow) {
+  return row?.type === "date" ? 44 : 76;
+}
+
+function observeScrollElementRect(
+  instance: { scrollElement: Element | null },
+  cb: (rect: { width: number; height: number }) => void,
+) {
+  const element = instance.scrollElement as HTMLElement | null;
+  if (!element) return undefined;
+
+  const emitRect = () => {
+    const rect = element.getBoundingClientRect();
+    cb({
+      width: element.clientWidth || rect.width || 1024,
+      height: element.clientHeight || rect.height || 640,
+    });
+  };
+
+  emitRect();
+
+  if (typeof ResizeObserver === "undefined") {
+    return undefined;
+  }
+
+  const observer = new ResizeObserver(emitRect);
+  observer.observe(element);
+  return () => observer.disconnect();
 }
 
 // 채팅방 내 채팅
@@ -34,150 +137,225 @@ export function ChatPage({
   const { messages, prependMessages, setMessages } = useMessageStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  
   const isFetching = useRef(false);
+  const shouldFollowBottomRef = useRef(true);
+  const needsInitialScrollRef = useRef(false);
+  const pendingPrependAnchorRef = useRef<{
+    key: string;
+    top: number;
+    scrollTop: number;
+    totalSize: number;
+  } | null>(null);
 
-  const [editingMsgId, setEditingMsgId] = useState<number | null>(null);
-
-  // 로딩 상태 관리
+  const [editingMsgId, setEditingMsgId] = useState<
+    NonNullable<ChatMessage["msgId"]> | null
+  >(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isBottom, setIsBottom] = useState(false);
 
-  const [isBottom, setIsBottom] = useState(false);  
-  
-  // 가장 최근 메시지의 ID를 메모이제이션  
-  const lastMsgId = useMemo(() => {
-    return messages.length > 0 ? messages[messages.length - 1].msgId : null;
-  }, [messages]);
+  const rows = useMemo(() => buildChatRows(messages), [messages]);
+  const lastRowKey = rows[rows.length - 1]?.key ?? "";
+  const layoutSignal = useMemo(
+    () =>
+      messages
+        .map(
+          (message) =>
+            `${message.msgId}:${message.content}:${message.fileUrl ?? ""}:${message.isUpdated}:${message.checkCnt}:${message.prayCnt}:${message.sparkleCnt}:${message.clapCnt}:${message.likeCnt}:${message.image ?? ""}`,
+        )
+        .join("|"),
+    [messages],
+  );
 
-  // 이모지 개수 변경 감지를 위해 이전 메시지들의 이모지 총합을 저장하는 ref
-  const prevMessageLengths = useRef<number[]>([]);
-  
-  // 메시지가 변경될 때마다 (새 메시지 또는 이모지 업데이트) 스크롤 위치 조정
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => containerRef.current,
+    estimateSize: (index) => rowEstimate(rows[index]),
+    getItemKey: (index) => rows[index]?.key ?? `missing:${index}`,
+    overscan: VIRTUAL_OVERSCAN_ROWS,
+    initialRect: { width: 1024, height: 640 },
+    observeElementRect: observeScrollElementRect,
+    useFlushSync: false,
+  });
 
-    // 사용자가 현재 스크롤이 하단 근처에 있는지 확인 (100px 이내)
-    const isAtBottom = 
-      container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+  const virtualItems = rowVirtualizer.getVirtualItems();
+  const scrollOffset = rowVirtualizer.scrollOffset ?? 0;
+  const firstVisibleIndex = useMemo(() => {
+    const firstVisible = virtualItems.find((item) => item.end > scrollOffset);
+    return firstVisible?.index ?? virtualItems[0]?.index ?? -1;
+  }, [scrollOffset, virtualItems]);
+  const activeDateTimestamp = useMemo(() => {
+    if (firstVisibleIndex < 0) return null;
 
-    // 사용자가 하단 근처에 있거나 초기 로딩 시 스크롤을 하단으로 이동
-    if (isAtBottom || prevMessageLengths.current.length === 0) {
-      container.scrollTop = container.scrollHeight;
+    for (let index = firstVisibleIndex; index >= 0; index -= 1) {
+      const row = rows[index];
+      if (row?.type === "date") return row.timestamp;
     }
 
-    // 각 메시지의 이모지 총합을 계산하여 저장 (변경 감지용)
-    prevMessageLengths.current = messages.map(m => 
-      m.checkCnt + m.prayCnt + m.sparkleCnt + m.clapCnt + m.likeCnt
-    );
-  }, [messages]);
+    return null;
+  }, [firstVisibleIndex, rows]);
+  const showStickyDate =
+    activeDateTimestamp !== null && rows[firstVisibleIndex]?.type !== "date";
 
-  // 최초 메시지 불러오기 + 로딩 해제
+  const scrollToLatest = useCallback(() => {
+    if (rows.length === 0) return;
+
+    requestAnimationFrame(() => {
+      rowVirtualizer.scrollToIndex(rows.length - 1, { align: "end" });
+    });
+  }, [rowVirtualizer, rows.length]);
+
   useEffect(() => {
+    let cancelled = false;
+
     (async () => {
+      setIsLoading(true);
       const res = await getMessages(workspaceId, tabId, undefined);
+
+      if (cancelled) return;
+
       if (res.messages && res.messages.length) {
-        const new_messages = res.messages.map((msg: any) => {
-          return {
-            senderId: msg.sender_id,
-            msgId: msg.msg_id,
-            nickname: msg.nickname,
-            content: msg.content,
-            image: msg.image,
-            createdAt: msg.created_at,
-            isUpdated: msg.is_updated,
-            fileUrl: msg.file_url,
-            checkCnt: msg.e_check_cnt,
-            clapCnt: msg.e_clap_cnt,
-            likeCnt: msg.e_like_cnt,
-            sparkleCnt: msg.e_sparkle_cnt,
-            prayCnt: msg.e_pray_cnt,
-            myToggle: msg.my_toggle,
-          };
-        });
-        console.log("getmessages, chatpage: ", new_messages[0].myToggle);
-        setMessages(new_messages);
+        setMessages(res.messages.map(mapApiMessage));
       } else {
         setMessages([]);
       }
-      setIsLoading(false);
+
+      needsInitialScrollRef.current = true;
+      shouldFollowBottomRef.current = true;
       setIsBottom(true);
+      setIsLoading(false);
     })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [workspaceId, tabId, setMessages]);
 
-  // 스크롤이 최하단인 경우 메세지 이모지 넣을때,
-  useEffect(() => {
-    if (isBottom && containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+  useLayoutEffect(() => {
+    const anchor = pendingPrependAnchorRef.current;
+
+    if (anchor) {
+      const anchorIndex = rows.findIndex((row) => row.key === anchor.key);
+      pendingPrependAnchorRef.current = null;
+      const restoreBySizeDelta = () => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const sizeDelta = rowVirtualizer.getTotalSize() - anchor.totalSize;
+        container.scrollTop = anchor.scrollTop + Math.max(0, sizeDelta);
+      };
+
+      if (anchorIndex >= 0) {
+        requestAnimationFrame(() => {
+          rowVirtualizer.scrollToIndex(anchorIndex, { align: "start" });
+
+          requestAnimationFrame(() => {
+            const container = containerRef.current;
+            if (!container) return;
+
+            const anchorElement = findRenderedRow(container, anchor.key);
+            if (!anchorElement) {
+              restoreBySizeDelta();
+              return;
+            }
+
+            container.scrollTop +=
+              anchorElement.getBoundingClientRect().top - anchor.top;
+          });
+        });
+      } else {
+        requestAnimationFrame(restoreBySizeDelta);
+      }
+
+      return;
     }
-  }, [...messages.slice(-12)]);
 
-  useEffect(() => {
-    if (isBottom && containerRef.current) {
-      requestAnimationFrame(() => {
-        if (containerRef.current) {
-          containerRef.current.scrollTop = containerRef.current.scrollHeight;
-        }
-      });
-      console.log("containerRef.current.scrollTop", containerRef.current.scrollTop)
+    if (needsInitialScrollRef.current) {
+      needsInitialScrollRef.current = false;
+      scrollToLatest();
+      return;
     }
-  }, [editingMsgId]);
+
+    if (shouldFollowBottomRef.current) {
+      scrollToLatest();
+    }
+  }, [lastRowKey, rows, rowVirtualizer, scrollToLatest]);
 
   useEffect(() => {
-    // 최초 로딩 중에는 이 훅이 동작하지 않도록 방지
-    if (isLoading) return;
+    rowVirtualizer.measure();
 
-    const el = containerRef.current;
-    if (!el) return;
+    if (shouldFollowBottomRef.current || isBottom) {
+      scrollToLatest();
+    }
+  }, [editingMsgId, isBottom, layoutSignal, rowVirtualizer, scrollToLatest]);
 
-    requestAnimationFrame(() => {
-      const newHeight = el.scrollHeight;
-      el.scrollTop = newHeight;
-    });
-  }, [lastMsgId, isLoading]);
+  const capturePrependAnchor = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-  // 스크롤을 올려서 과거 메세지들을 불러와
+    const scrollTop = container.scrollTop;
+    const firstVisibleItem = rowVirtualizer
+      .getVirtualItems()
+      .find((item) => item.end > scrollTop && rows[item.index]?.type === "message");
+
+    if (!firstVisibleItem) return;
+
+    const row = rows[firstVisibleItem.index];
+    if (!row) return;
+
+    const renderedRow = findRenderedRow(container, row.key);
+    pendingPrependAnchorRef.current = {
+      key: row.key,
+      top:
+        renderedRow?.getBoundingClientRect().top ??
+        container.getBoundingClientRect().top,
+      scrollTop,
+      totalSize: rowVirtualizer.getTotalSize(),
+    };
+  }, [rowVirtualizer, rows]);
+
   const handleScroll = async (event: React.UIEvent<HTMLDivElement>) => {
     const el = event.currentTarget;
+    const nearTop = el.scrollTop < TOP_FETCH_THRESHOLD_PX;
+    const nearBottom = !nearTop && isNearBottom(el);
+    shouldFollowBottomRef.current = nearBottom;
+    setIsBottom(nearBottom);
 
-    if (el.scrollHeight - el.scrollTop - el.clientHeight <= 30) setIsBottom(true);
-    else setIsBottom(false);
+    if (!nearTop || isFetching.current) {
+      return;
+    }
 
-    if (el.scrollTop < 30 && !isFetching.current && messages.length > 0) {
-      isFetching.current = true;
-      const oldestId = messages[0]?.msgId;
-      const previousHeight = el.scrollHeight;
+    const oldestId = firstNumericMessageId(messages);
+    if (oldestId === undefined) return;
 
+    isFetching.current = true;
+    shouldFollowBottomRef.current = false;
+    setIsBottom(false);
+    capturePrependAnchor();
+
+    try {
       const res = await getMessages(workspaceId, tabId, oldestId);
 
       if (res.messages && res.messages.length > 0) {
-        const new_messages = res.messages.map((msg: any) => {
-          return {
-            senderId: msg.sender_id,
-            msgId: msg.msg_id,
-            nickname: msg.nickname,
-            content: msg.content,
-            image: msg.image,
-            createdAt: msg.created_at,
-            isUpdated: msg.is_updated,
-            fileUrl: msg.file_url,
-            checkCnt: msg.e_check_cnt,
-            clapCnt: msg.e_clap_cnt,
-            likeCnt: msg.e_like_cnt,
-            sparkleCnt: msg.e_sparkle_cnt,
-            prayCnt: msg.e_pray_cnt,
-            myToggle: msg.my_toggle,
-          };
-        });
-        prependMessages(new_messages);
-        requestAnimationFrame(() => {
-          const newHeight = el.scrollHeight;
-          el.scrollTop = newHeight - previousHeight;
-        });
+        prependMessages(res.messages.map(mapApiMessage));
+      } else {
+        pendingPrependAnchorRef.current = null;
       }
+    } finally {
       isFetching.current = false;
     }
   };
+
+  const handleRowContentLoad = useCallback(
+    (event: React.SyntheticEvent<HTMLDivElement>) => {
+      const rowElement = event.currentTarget;
+      rowVirtualizer.measureElement(rowElement);
+
+      if (shouldFollowBottomRef.current) {
+        scrollToLatest();
+      }
+    },
+    [rowVirtualizer, scrollToLatest],
+  );
 
   // 로딩 중이면, 스켈레톤 이미지 보여줌
   if (isLoading) {
@@ -195,84 +373,84 @@ export function ChatPage({
     );
   }
 
-  const dayStart = (iso: string) => {
-    const d = new Date(iso);
-    d.setHours(0, 0, 0, 0);
-    return d.getTime();
-  };
-
   return (
-    <div className={`flex flex-col w-full h-full ${className}`}>
+    <div className={`flex flex-col w-full h-full min-h-0 ${className}`}>
       <SSEListener />
-      <WebSocketLikeClient workspaceId={workspaceId} tabId={tabId} />
-      <WebSocketProfileClient workspaceId={workspaceId} tabId={tabId} />
-      <WebSocketClient workspaceId={workspaceId} tabId={tabId} />
-      {/* 날짜 헤더의 sticky를 위함, overflow-y-auto scrollbar-thin의 위치는 여기에 고정되어야 함 */}
+      <RealtimeWebSocketClient workspaceId={workspaceId} tabId={tabId} />
       <div
-        className="flex-1 overflow-y-auto scrollbar-thin"
+        className="relative flex-1 min-h-0 overflow-y-auto scrollbar-thin"
         ref={containerRef}
-        onScroll={(event) => {
-          handleScroll(event);
-        }}
+        data-testid="chat-scroll-container"
+        onScroll={handleScroll}
       >
-        {messages.map((msg, idx) => {
-          const prev = messages[idx - 1];
-          const todayKey = msg.createdAt ? dayStart(msg.createdAt) : null;
-          const prevKey = prev?.createdAt ? dayStart(prev.createdAt) : null;
-          const showDateHeader =
-            todayKey !== null && (prevKey === null || todayKey !== prevKey);
+        {showStickyDate && (
+          <div className="sticky top-1.5 z-10 h-0 pointer-events-none">
+            <ShowDate timestamp={activeDateTimestamp} />
+          </div>
+        )}
 
-          let showProfile = true;
+        <div
+          className="relative w-full"
+          style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
+        >
+          {virtualItems.map((virtualItem) => {
+            const row = rows[virtualItem.index];
+            if (!row) return null;
 
-          if (
-            prev &&
-            prev.nickname === msg.nickname &&
-            prev.createdAt &&
-            msg.createdAt
-          ) {
-            const prevTime = new Date(prev.createdAt).getTime();
-            const currTime = new Date(msg.createdAt).getTime();
-            const diff = currTime - prevTime;
-
-            if (diff <= 5 * 60 * 1000) {
-              showProfile = false;
+            if (row.type === "date") {
+              return (
+                <div
+                  key={row.key}
+                  data-index={virtualItem.index}
+                  data-chat-row-key={row.key}
+                  data-chat-row-type={row.type}
+                  ref={rowVirtualizer.measureElement}
+                  onLoadCapture={handleRowContentLoad}
+                  className="absolute left-0 w-full"
+                  style={{ top: `${virtualItem.start}px` }}
+                >
+                  <ShowDate timestamp={row.timestamp} sticky={false} />
+                </div>
+              );
             }
-          }
 
-          return (
-            <React.Fragment key={msg.msgId}>
-              {showDateHeader && todayKey && <ShowDate timestamp={todayKey} />}
-              <ChatProfile
-                senderId={msg.senderId || ""}
-                msgId={msg.msgId || 0}
-                imgSrc={msg.image || "/user_default.png"}
-                nickname={msg.nickname}
-                time={
-                  msg.createdAt
-                    ? new Date(msg.createdAt).toLocaleTimeString("ko-KR", {
-                        hour: "numeric",
-                        minute: "2-digit",
-                        hour12: true,
-                      })
-                    : " "
-                }
-                content={msg.content}
-                showProfile={showProfile}
-                fileUrl={msg.fileUrl}
-                isUpdated={msg.isUpdated}
-                checkCnt={msg.checkCnt}
-                prayCnt={msg.prayCnt}
-                sparkleCnt={msg.sparkleCnt}
-                clapCnt={msg.clapCnt}
-                likeCnt={msg.likeCnt}
-                myToggle={msg.myToggle}
-                isEditMode={editingMsgId === msg.msgId}
-                onStartEdit={() => setEditingMsgId(msg.msgId ? msg.msgId:0)}
-                onEndEdit={() => setEditingMsgId(null)}
-              />
-            </React.Fragment>
-          );
-        })}
+            const msgId = rowActionMessageId(row);
+
+            return (
+              <div
+                key={row.key}
+                data-index={virtualItem.index}
+                data-chat-row-key={row.key}
+                data-chat-row-type={row.type}
+                ref={rowVirtualizer.measureElement}
+                onLoadCapture={handleRowContentLoad}
+                className="absolute left-0 w-full"
+                style={{ top: `${virtualItem.start}px` }}
+              >
+                <ChatProfile
+                  senderId={row.message.senderId || ""}
+                  msgId={msgId}
+                  imgSrc={row.message.image || "/user_default.png"}
+                  nickname={row.message.nickname}
+                  time={formatMessageTime(row.message.createdAt)}
+                  content={row.message.content}
+                  showProfile={row.showProfile}
+                  fileUrl={row.message.fileUrl ?? null}
+                  isUpdated={row.message.isUpdated ?? 0}
+                  checkCnt={row.message.checkCnt}
+                  prayCnt={row.message.prayCnt}
+                  sparkleCnt={row.message.sparkleCnt}
+                  clapCnt={row.message.clapCnt}
+                  likeCnt={row.message.likeCnt}
+                  myToggle={row.message.myToggle}
+                  isEditMode={editingMsgId !== null && editingMsgId === msgId}
+                  onStartEdit={() => setEditingMsgId(msgId)}
+                  onEndEdit={() => setEditingMsgId(null)}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

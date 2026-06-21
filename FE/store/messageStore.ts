@@ -1,9 +1,10 @@
 import { create } from "zustand";
 
 export type EmojiType = 'check' | 'pray' | 'sparkle' | 'clap' | 'like';
+export type MessageId = number | string;
 
 export interface PendingEmojiUpdate {
-  msgId: number;
+  msgId: MessageId;
   emojiType: EmojiType;
   emojiAction: 'like' | 'unlike';
 }
@@ -16,10 +17,10 @@ export interface EmojiCounts {
   likeCnt: number;
 }
 
-interface Message {
-  tabId: number;
+export interface Message {
+  tabId?: number;
   senderId: string;
-  msgId: number | undefined;
+  msgId: MessageId | undefined;
   nickname: string;
   image: string;
   content: string;
@@ -40,10 +41,10 @@ interface MessageStore {
   setMessage: (msg: string) => void;
 
   // 수정 버튼 누르면 수정 모드로 변경
-  updateMessage: (msgId: number, msg: string) => void;
+  updateMessage: (msgId: MessageId, msg: string) => void;
 
   // 메시지 삭제
-  deleteMessage: (id: number) => void;
+  deleteMessage: (id: MessageId) => void;
 
   // 메시지 전송 trigger
   sendFlag: boolean;
@@ -51,7 +52,7 @@ interface MessageStore {
   sendEmojiFlag: boolean;
   sendEditFlag: boolean;
   setSendFlag: (flag: boolean) => void;
-  setEditMsgFlag: (msgId: number, newContent:string) => void;
+  setEditMsgFlag: (msgId: MessageId, newContent:string) => void;
   cleanEditMsgFlag: () => void;
   setSendEmojiFlag: (flag: boolean) => void;
   setSendEditFlag: (flag: boolean) => void;
@@ -92,7 +93,7 @@ interface MessageStore {
   clearInFlightEmojiUpdates: () => void;
 
   // 웹소켓에서 브로드캐스트된 emoji count를 설정하는 함수
-  updateEmojiCounts: (msgId: number, emojiData: EmojiCounts) => void;
+  updateEmojiCounts: (msgId: MessageId, emojiData: EmojiCounts) => void;
 
   // '좋아요' 버튼 클릭 시 UI가 호출할 단 하나의 함수
   toggleEmoji: () => void;
@@ -102,11 +103,11 @@ interface MessageStore {
   editProfile: (editName: string, editImage: string| undefined) => void;
 
   // 나의 이모지 토글 상태 업데이트 (서버 응답 기다리지 않고 UI 먼저 업데이트)
-  toggleMyEmoji: (msgId: number, emojiType: string) => void;
+  toggleMyEmoji: (msgId: MessageId, emojiType: string) => void;
 
   // 메세지 수정
   editMessage: {
-    "msgId": number;
+    "msgId": MessageId;
     "content": string;
   }
 }
@@ -227,7 +228,7 @@ export const useMessageStore = create<MessageStore>((set, get) => ({
       inFlightEmojiUpdates: [...state.inFlightEmojiUpdates, ...updates],
     })),
   clearInFlightEmojiUpdates: () => set({ inFlightEmojiUpdates: [] }),
-  removeFirstInFlightUpdate: (msgId: number) =>
+  removeFirstInFlightUpdate: (msgId: MessageId) =>
     set((state) => {
       const idx = state.inFlightEmojiUpdates.findIndex(
         (u) => u.msgId === msgId,
@@ -344,4 +345,3 @@ export const useMessageStore = create<MessageStore>((set, get) => ({
 
 
 }));
-

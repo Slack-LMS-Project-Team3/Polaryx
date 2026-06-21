@@ -1,3 +1,4 @@
+import asyncio
 from typing import List
 
 from app.domain.message import Message, Emoji
@@ -12,10 +13,13 @@ class MessageService:
         self.message_repo = MessageRepo()
         self.files_repo = FilesRepo()
     
-    async def save_message(self, tab_id: int, sender_id: uuid.UUID, content: str, file_data: Optional[str]) -> None:
+    def save_message_sync(self, tab_id: int, sender_id: uuid.UUID | str, content: str, file_data: Optional[str]) -> int:
         message = Message.of(tab_id, sender_id, content, file_data)
         res = self.message_repo.insert(message)
         return res["lastrowid"]
+
+    async def save_message(self, tab_id: int, sender_id: uuid.UUID | str, content: str, file_data: Optional[str]) -> int:
+        return await asyncio.to_thread(self.save_message_sync, tab_id, sender_id, content, file_data)
     
     async def toggle_like(self, tab_id: int, msg_id: int, user_id: uuid.UUID, type: str, plus: bool):
         emoji = Emoji.of(tab_id, user_id, msg_id, type)

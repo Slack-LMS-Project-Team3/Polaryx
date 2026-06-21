@@ -43,6 +43,33 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
+      - name: Install backend dependencies
+        run: python -m pip install -r BE/requirements.txt
+
+      - name: Run backend regression suite
+        working-directory: BE
+        run: python -m unittest tests.regression.test_auth_realtime_regression tests.regression.test_security_access_control_regression tests.unit.test_service_business_rules
+
+      - name: Install frontend dependencies
+        working-directory: FE
+        run: npm ci
+
+      - name: Run frontend lint
+        working-directory: FE
+        run: npm run lint
+
+      - name: Run frontend build
+        working-directory: FE
+        run: npm run build
+
+      - name: Run frontend test suite
+        working-directory: FE
+        run: npm run test
+
+      - name: Run CI quality gate guard
+        working-directory: BE
+        run: python -m unittest tests.regression.test_ci_backend_gate
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS `emoji` (
   `msg_id` bigint(20) NOT NULL,
   `user_id` binary(16) NOT NULL,
   `workspace_id` int(11) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_emoji_msg_user` (`msg_id`,`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS  `group_members` (
@@ -89,7 +90,8 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `sparkle_cnt` int(11) DEFAULT '0',
   `pray_cnt` int(11) DEFAULT '0',
   `workspace_id` int(11) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_messages_tab_deleted_id_desc` (`tab_id`,`deleted_at`,`id` DESC)
 ) ENGINE=InnoDB AUTO_INCREMENT=255 DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `notifications` (
@@ -104,8 +106,36 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   `workspace_id` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `read_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_notifications_receiver_created` (`receiver_id`,`created_at` DESC)
 ) ENGINE=InnoDB AUTO_INCREMENT=1540 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `notification_events` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `event_id` varchar(64) NOT NULL,
+  `workspace_id` int(11) NOT NULL DEFAULT 1,
+  `recipient_user_id` binary(16) DEFAULT NULL,
+  `recipient_scope` varchar(32) NOT NULL DEFAULT 'workspace',
+  `type` varchar(64) NOT NULL,
+  `tab_id` bigint(20) DEFAULT NULL,
+  `payload_json` json NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `published_at` timestamp NULL DEFAULT NULL,
+  `status` varchar(16) NOT NULL DEFAULT 'pending',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_notification_events_event_id` (`event_id`),
+  KEY `idx_notification_events_workspace_status_id` (`workspace_id`,`status`,`id`),
+  KEY `idx_notification_events_recipient_workspace_id` (`recipient_user_id`,`workspace_id`,`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `notification_delivery_state` (
+  `user_id` binary(16) NOT NULL,
+  `workspace_id` int(11) NOT NULL DEFAULT 1,
+  `last_acked_event_id` varchar(64) DEFAULT NULL,
+  `last_acked_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`user_id`,`workspace_id`),
+  KEY `idx_notification_delivery_state_workspace` (`workspace_id`,`last_acked_event_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `push_subscriptions` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -171,7 +201,8 @@ CREATE TABLE IF NOT EXISTS `tab_members` (
   `user_name` varchar(32) DEFAULT NULL,
   `visited_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_tab_member` (`user_id`,`tab_id`,`workspace_id`)
+  UNIQUE KEY `uq_tab_member` (`user_id`,`tab_id`,`workspace_id`),
+  KEY `idx_tab_members_workspace_tab_user` (`workspace_id`,`tab_id`,`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=569 DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `tabs` (
@@ -213,7 +244,8 @@ CREATE TABLE IF NOT EXISTS `workspace_members` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_user_workspace` (`user_id`,`workspace_id`)
+  UNIQUE KEY `uq_user_workspace` (`user_id`,`workspace_id`),
+  KEY `idx_workspace_members_workspace_deleted_user` (`workspace_id`,`deleted_at`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `workspaces` (
