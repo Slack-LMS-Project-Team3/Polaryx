@@ -90,6 +90,7 @@ export function TabMembers() {
           membersCount={tabInfo?.members_count || 0}
           tabMembers={tabMembers}
           tabGroups={tabGroups}
+          sectionId={tabInfo?.section_id}
         />
       )}
     </>

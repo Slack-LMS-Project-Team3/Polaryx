@@ -17,9 +17,6 @@ router = APIRouter(prefix="/auth")
 GOOGLE_CLIENT_ID = settings.GOOGLE_CLIENT_ID
 GOOGLE_CLIENT_SECRET = settings.GOOGLE_CLIENT_SECRET
 GOOGLE_REDIRECT_URI = settings.GOOGLE_REDIRECT_URI
-GOOGLE_CLIENT_ID = settings.GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET = settings.GOOGLE_CLIENT_SECRET
-GOOGLE_REDIRECT_URI = settings.GOOGLE_REDIRECT_URI
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
@@ -109,7 +106,7 @@ async def auth_callback(provider: Provider, code: str, response:Response):
             access_token = token_data.get("access_token")
 
             if not access_token:
-                return {"error": "Access token not received"}
+                raise HTTPException(status_code=400, detail="Access token not received")
             
             # Step 2: 유저 정보 요청
             userinfo_res = await client.get(

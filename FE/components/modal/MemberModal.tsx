@@ -28,6 +28,7 @@ interface MemberModalProps {
   membersCount: number;
   tabMembers: Member[];
   tabGroups: Group[];
+  sectionId: number;
 }
 
 export function MemberModal({
@@ -40,6 +41,7 @@ export function MemberModal({
   membersCount,
   tabMembers,
   tabGroups,
+  sectionId,
 }: MemberModalProps) {
   const [view, setView] = useState<"members" | "groups" | "add-members" | "add-groups">("members");
 
@@ -94,9 +96,11 @@ export function MemberModal({
                 <TabsTrigger value="members">
                   Members ({membersCount})
                 </TabsTrigger>
-                <TabsTrigger value="groups">
-                  Groups ({tabGroups.length})
-                </TabsTrigger>
+                {sectionId !== 4 && (
+                  <TabsTrigger value="groups">
+                    Groups ({tabGroups.length})
+                  </TabsTrigger>
+                )}
               </TabsList>
             </Tabs>
           </div>
@@ -104,7 +108,7 @@ export function MemberModal({
         <Separator/>
         <div className="flex-grow overflow-y-auto scrollbar-thin">
           {view === "members" && (
-            <TabMembersModal tabMembers={tabMembers} onAddClick={handleAddMembersClick} />
+            <TabMembersModal tabMembers={tabMembers} onAddClick={handleAddMembersClick} sectionId={sectionId} />
           )}
           {view === "groups" && (
             <TabGroupsModal tabGroups={tabGroups} onAddClick={handleAddGroupsClick} />

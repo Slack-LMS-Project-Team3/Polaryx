@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTabInfoStore } from "@/store/tabStore";
 import { TabMembers } from "@/components/modal/TabMembers";
+import { ExitTab } from "@/components/chat/ExitTab"
 
 export function TabHeader() {
   // URL에서 workspaceId와 tabId 추출
@@ -75,13 +76,7 @@ export function TabHeader() {
 
           <div className="flex flex-row items-center gap-2">
             <TabMembers />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="flex items-center gap-1 px-7 hover:bg-gray-200"
-            >
-              <LogOut size={28} />
-            </Button>
+            <ExitTab />
           </div>
         </div>
       </div>
